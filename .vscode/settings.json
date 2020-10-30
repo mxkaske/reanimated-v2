@@ -1,0 +1,9 @@
+{
+  "colorize.languages": [
+    "javascriptreact",
+    "javascript",
+    "typescript",
+    "typescriptreact"
+  ],
+  "colorize.colorized_colors": ["HEXA"]
+}
