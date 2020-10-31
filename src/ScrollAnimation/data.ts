@@ -9,18 +9,18 @@ export const waves = [
 export const content = [
   {
     icon: "search",
-    title: "Create new issues",
+    title: "Search the issues",
     description: "Don't fear to ask.",
   },
   {
     icon: "code",
     title: "Learn from the bests",
-    description: "Do it right - from the start.\nStay curious, read blogs.\n",
+    description: "Do it right - from the start.\nStay curious, read blogs.",
   },
   {
     icon: "truck",
     title: "Explore, enjoy and give back",
     description:
-      "Ship great content\nShow others what you've learned.\nTell them your difficulties.\n",
+      "Ship great content\nShow others what you've learned.\nTell them your difficulties.",
   },
 ];

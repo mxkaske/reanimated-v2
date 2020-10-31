@@ -43,7 +43,11 @@ const AppContainer = ({ darkMode, setDarkMode }: AppContainer) => {
     >
       <AppStack.Screen name="Home" component={Home} />
       <AppStack.Screen name="DefaultAnimation" component={DefaultAnimation} />
-      <AppStack.Screen name="ScrollAnimation" component={ScrollAnimation} />
+      <AppStack.Screen
+        name="ScrollAnimation"
+        component={ScrollAnimation}
+        options={{ headerShown: false }}
+      />
     </AppStack.Navigator>
   );
 };
