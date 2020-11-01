@@ -10,4 +10,5 @@ export type AppRoutes = {
   Home: undefined;
   DefaultAnimation: undefined;
   ScrollAnimation: undefined;
+  SmartHome: undefined;
 };

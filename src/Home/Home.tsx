@@ -22,6 +22,10 @@ const examples: Screen[] = [
     label: "Scroll Animation",
     screen: "ScrollAnimation",
   },
+  {
+    label: "Smart Home",
+    screen: "SmartHome",
+  },
 ];
 
 const Home = ({ navigation }: AppNavigationProps<"Home">) => {
