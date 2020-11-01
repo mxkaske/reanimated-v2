@@ -11,9 +11,9 @@ import Animated, {
 } from "react-native-reanimated";
 import { Box, Text, useTheme } from "../components";
 import { ReText } from "react-native-redash";
+import { Path, Rect, Svg } from "react-native-svg";
 import theme from "../components/Theme";
 
-// 375 === screen width
 const AnimatedBox = Animated.createAnimatedComponent(Box);
 
 interface SmartHomeProps {}
@@ -33,6 +33,9 @@ const SmartHome = () => {
           style={animatedStyle}
         />
         <Box backgroundColor="tertiary">
+          <Box style={{ ...StyleSheet.absoluteFillObject }}>
+            <Wave progress={progress} />
+          </Box>
           <Circle progress={progress} dragged={dragged} />
         </Box>
       </Box>
@@ -43,6 +46,39 @@ const SmartHome = () => {
         </Box>
       </Box>
     </Box>
+  );
+};
+
+interface WaveProps {
+  progress: Animated.SharedValue<number>;
+}
+
+const Wave = ({ progress }: WaveProps) => {
+  const size = 80;
+  const theme = useTheme();
+  const { width: windowWidth } = useWindowDimensions();
+  const height = 80;
+  const width = 200;
+  return (
+    <Svg height={height} width={windowWidth}>
+      <Path
+        d={`
+        M0 ${height}
+        C${width / 8} ${height},
+        ${width / 8} ${height},
+        ${width / 4} ${height / 2}, 
+        C${(width * 3) / 8} 0, 
+        ${(width * 5) / 8} 0, 
+        ${(width * 3) / 4} ${height / 2},
+        C${(width * 7) / 8} ${height},
+        ${(width * 7) / 8} ${height},
+        ${width} ${height}, 
+        `}
+        fill={theme.colors.mainBackground}
+        stroke={theme.colors.tertiary}
+        strokeWidth={2}
+      />
+    </Svg>
   );
 };
 
