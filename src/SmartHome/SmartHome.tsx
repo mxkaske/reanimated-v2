@@ -1,18 +1,20 @@
 import React from "react";
-import { StyleSheet } from "react-native";
+import { StyleSheet, useWindowDimensions } from "react-native";
 import { PanGestureHandler } from "react-native-gesture-handler";
 import Animated, {
   useSharedValue,
   useAnimatedGestureHandler,
   useAnimatedStyle,
   withTiming,
-  useAnimatedProps,
+  useDerivedValue,
+  withSpring,
 } from "react-native-reanimated";
 import { Box, Text, useTheme } from "../components";
+import { ReText } from "react-native-redash";
+import theme from "../components/Theme";
 
 // 375 === screen width
 const AnimatedBox = Animated.createAnimatedComponent(Box);
-const AnimatedText = Animated.createAnimatedComponent(Text);
 
 interface SmartHomeProps {}
 const SmartHome = () => {
@@ -50,21 +52,31 @@ interface CircleProps {
 }
 
 const Circle = ({ progress, dragged }: CircleProps) => {
-  const size = 50;
+  const size = 60;
+  const { width } = useWindowDimensions();
+  const minPosition = 0;
+  const maxPosition = width - size;
   const x = useSharedValue(0);
-  const gestureHandler = useAnimatedGestureHandler({
+  const gestureHandler = useAnimatedGestureHandler<Record<string, number>>({
     onStart: (_, ctx) => {
       ctx.startX = x.value;
       dragged.value = true;
     },
     onActive: (event, ctx) => {
-      // @ts-ignore
-      x.value = ctx.startX + event.translationX;
-      // @ts-ignore
-      progress.value = (ctx.startX + event.translationX) / 375;
+      const position = ctx.startX + event.translationX;
+      const newX =
+        position >= minPosition
+          ? position <= maxPosition
+            ? ctx.startX + event.translationX
+            : maxPosition
+          : minPosition;
+      x.value = newX;
+      progress.value = newX / maxPosition;
     },
     onEnd: (_) => {
-      //x.value = withSpring(0);
+      const round5 = Math.ceil(x.value / maxPosition / 0.05) * 0.05;
+      x.value = withSpring(round5 * maxPosition);
+      progress.value = round5;
       dragged.value = false;
     },
   });
@@ -103,16 +115,14 @@ interface NumberProps {
 }
 
 const Number = ({ progress }: NumberProps) => {
-  const animatedProps = useAnimatedProps(() => ({
-    children: `${(progress.value * 100).toFixed()}%`,
-  }));
+  const animatedProps = useDerivedValue(
+    () => `${(progress.value * 100).toFixed(0)}%`
+  );
   return (
     <Box alignItems="center" padding="l">
-      <Text>{progress.value}</Text>
-      <AnimatedText
-        variant="title"
-        animatedProps={animatedProps}
-        color="tertiary"
+      <ReText
+        text={animatedProps}
+        style={{ ...theme.textVariants.title, color: theme.colors.tertiary }}
       />
       <Text variant="description">Light Intensity</Text>
     </Box>
@@ -152,11 +162,11 @@ const NumberBar = ({ progress, dragged }: NumberBarProps) => {
           return {
             backgroundColor: isActive
               ? theme.colors.tertiary
-              : theme.colors.baseDescrition,
+              : theme.colors.baseDescription,
             height: withTiming(!isActive ? barHeight : activeBarHeight),
-            width: withTiming(!isActive ? barWidth : activeBarWidth),
-            marginLeft: withTiming(!isActive ? 1 : 0),
-            marginRight: withTiming(!isActive ? 1 : 0),
+            width: !isActive ? barWidth : activeBarWidth,
+            marginLeft: !isActive ? 1 : 0,
+            marginRight: !isActive ? 1 : 0,
             borderRadius: 2,
           };
         });

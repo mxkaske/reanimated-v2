@@ -27,7 +27,7 @@ const theme = createTheme({
     secondary: palette.bluePrimary,
     tertiary: palette.purplePrimary,
     baseText: palette.black,
-    baseDescrition: palette.greyPrimary,
+    baseDescription: palette.greyPrimary,
     baseTitle: palette.bluePrimary,
   },
   spacing: {
@@ -63,7 +63,7 @@ const theme = createTheme({
     description: {
       fontSize: 15,
       fontFamily: "Epilogue-Light",
-      color: "baseText",
+      color: "baseDescription",
     },
   },
   breakpoints: {
@@ -82,6 +82,7 @@ const darkTheme = {
     tertiary: palette.purplePrimary,
     baseText: palette.white,
     baseTitle: palette.redPrimary,
+    baseDescription: palette.greyPrimary,
   },
 };
 
