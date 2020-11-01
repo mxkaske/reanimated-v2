@@ -32,7 +32,7 @@ const SmartHome = () => {
           backgroundColor="tertiary"
           style={animatedStyle}
         />
-        <Box backgroundColor="tertiary">
+        <Box backgroundColor="tertiary" height={80} justifyContent="flex-end">
           <Box style={{ ...StyleSheet.absoluteFillObject }}>
             <Wave progress={progress} />
           </Box>
@@ -58,11 +58,23 @@ const Wave = ({ progress }: WaveProps) => {
   const theme = useTheme();
   const { width: windowWidth } = useWindowDimensions();
   const height = 80;
-  const width = 200;
+  const width = 220;
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      transform: [
+        {
+          translateX: withSpring(
+            progress.value * (windowWidth - width / 2) - width / 2
+          ),
+        },
+      ],
+    };
+  });
   return (
-    <Svg height={height} width={windowWidth}>
-      <Path
-        d={`
+    <AnimatedBox style={animatedStyle}>
+      <Svg height={height} width={windowWidth}>
+        <Path
+          d={`
         M0 ${height}
         C${width / 8} ${height},
         ${width / 8} ${height},
@@ -74,11 +86,12 @@ const Wave = ({ progress }: WaveProps) => {
         ${(width * 7) / 8} ${height},
         ${width} ${height}, 
         `}
-        fill={theme.colors.mainBackground}
-        stroke={theme.colors.tertiary}
-        strokeWidth={2}
-      />
-    </Svg>
+          fill={theme.colors.mainBackground}
+          stroke={theme.colors.tertiary}
+          strokeWidth={2}
+        />
+      </Svg>
+    </AnimatedBox>
   );
 };
 
