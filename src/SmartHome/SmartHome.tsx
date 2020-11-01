@@ -1,6 +1,10 @@
 import React from "react";
-import { StyleSheet, useWindowDimensions } from "react-native";
-import { PanGestureHandler } from "react-native-gesture-handler";
+import { Pressable, StyleSheet, useWindowDimensions } from "react-native";
+import {
+  BaseButton,
+  PanGestureHandler,
+  TouchableWithoutFeedback,
+} from "react-native-gesture-handler";
 import Animated, {
   useSharedValue,
   useAnimatedGestureHandler,
@@ -32,10 +36,17 @@ const SmartHome = () => {
           backgroundColor="tertiary"
           style={animatedStyle}
         />
-        <Box backgroundColor="tertiary" height={80} justifyContent="flex-end">
-          <Box style={{ ...StyleSheet.absoluteFillObject }}>
-            <Wave progress={progress} />
-          </Box>
+        <Box height={1} backgroundColor="mainBackground" />
+        <Box
+          style={{ ...StyleSheet.absoluteFillObject }}
+          justifyContent="flex-end"
+        >
+          <Wave progress={progress} />
+        </Box>
+        <Box
+          style={{ ...StyleSheet.absoluteFillObject }}
+          justifyContent="flex-end"
+        >
           <Circle progress={progress} dragged={dragged} />
         </Box>
       </Box>
@@ -54,17 +65,16 @@ interface WaveProps {
 }
 
 const Wave = ({ progress }: WaveProps) => {
-  const size = 80;
   const theme = useTheme();
   const { width: windowWidth } = useWindowDimensions();
-  const height = 80;
+  const height = 90;
   const width = 220;
   const animatedStyle = useAnimatedStyle(() => {
     return {
       transform: [
         {
           translateX: withSpring(
-            progress.value * (windowWidth - width / 2) - width / 2
+            -windowWidth + progress.value * windowWidth - width
           ),
         },
       ],
@@ -72,19 +82,21 @@ const Wave = ({ progress }: WaveProps) => {
   });
   return (
     <AnimatedBox style={animatedStyle}>
-      <Svg height={height} width={windowWidth}>
+      <Svg height={height + 1} width={3 * windowWidth}>
         <Path
           d={`
         M0 ${height}
-        C${width / 8} ${height},
-        ${width / 8} ${height},
-        ${width / 4} ${height / 2}, 
-        C${(width * 3) / 8} 0, 
-        ${(width * 5) / 8} 0, 
-        ${(width * 3) / 4} ${height / 2},
-        C${(width * 7) / 8} ${height},
-        ${(width * 7) / 8} ${height},
-        ${width} ${height}, 
+        L ${windowWidth} ${height},
+        C${windowWidth + width / 8} ${height},
+        ${windowWidth + width / 8} ${height},
+        ${windowWidth + width / 4} ${height / 2}, 
+        C${windowWidth + (width * 3) / 8} 0, 
+        ${windowWidth + (width * 5) / 8} 0, 
+        ${windowWidth + (width * 3) / 4} ${height / 2},
+        C${windowWidth + (width * 7) / 8} ${height},
+        ${windowWidth + (width * 7) / 8} ${height},
+        ${windowWidth + width} ${height}, 
+        L${3 * windowWidth} ${height}
         `}
           fill={theme.colors.mainBackground}
           stroke={theme.colors.tertiary}
@@ -106,6 +118,7 @@ const Circle = ({ progress, dragged }: CircleProps) => {
   const minPosition = 0;
   const maxPosition = width - size;
   const x = useSharedValue(0);
+  const pressed = useSharedValue(false);
   const gestureHandler = useAnimatedGestureHandler<Record<string, number>>({
     onStart: (_, ctx) => {
       ctx.startX = x.value;
@@ -135,9 +148,13 @@ const Circle = ({ progress, dragged }: CircleProps) => {
         {
           translateX: x.value,
         },
+        {
+          scale: pressed.value ? 0.7 : 1,
+        },
       ],
     };
   });
+  const togglePress = () => null;
   return (
     <PanGestureHandler onGestureEvent={gestureHandler}>
       <AnimatedBox
