@@ -5,12 +5,10 @@ import Animated, {
   useSharedValue,
   useAnimatedGestureHandler,
   useAnimatedStyle,
-  withSpring,
   withTiming,
-  useDerivedValue,
   useAnimatedProps,
 } from "react-native-reanimated";
-import { Box, Text } from "../components";
+import { Box, Text, useTheme } from "../components";
 
 // 375 === screen width
 const AnimatedBox = Animated.createAnimatedComponent(Box);
@@ -20,10 +18,19 @@ interface SmartHomeProps {}
 const SmartHome = () => {
   const progress = useSharedValue(0); // 0 to 1
   const dragged = useSharedValue(false);
+  const animatedStyle = useAnimatedStyle(() => ({
+    opacity: progress.value,
+  }));
   return (
     <Box flex={1} backgroundColor="mainBackground">
-      <Box flex={1} justifyContent="flex-end">
-        <Box backgroundColor="secondary">
+      <Box flex={1}>
+        <AnimatedBox
+          flex={1}
+          justifyContent="flex-end"
+          backgroundColor="tertiary"
+          style={animatedStyle}
+        />
+        <Box backgroundColor="tertiary">
           <Circle progress={progress} dragged={dragged} />
         </Box>
       </Box>
@@ -101,15 +108,23 @@ const Number = ({ progress }: NumberProps) => {
   }));
   return (
     <Box alignItems="center" padding="l">
-      <AnimatedText variant="title" animatedProps={animatedProps} />
+      <Text>{progress.value}</Text>
+      <AnimatedText
+        variant="title"
+        animatedProps={animatedProps}
+        color="tertiary"
+      />
       <Text variant="description">Light Intensity</Text>
     </Box>
   );
 };
 
-const barWidth = 2;
-const oddBarHeight = 15;
-const evenBarHeight = oddBarHeight * 2;
+const barWidth = 1;
+const oddBarHeight = 20;
+const evenBarHeight = oddBarHeight * 1.5;
+const activeBarHeight = oddBarHeight * 2;
+const activeBarWidth = 3;
+const arraySize = 21;
 
 interface NumberBarProps {
   progress: Animated.SharedValue<number>;
@@ -117,48 +132,36 @@ interface NumberBarProps {
 }
 
 const NumberBar = ({ progress, dragged }: NumberBarProps) => {
-  const array = new Array(21).fill(0);
-  const animatedStyle = useAnimatedStyle(() => {
-    return {
-      transform: [
-        {
-          translateX: progress.value * 375,
-        },
-        {
-          scale: withTiming(dragged.value ? 1.3 : 1),
-        },
-      ],
-      height: withSpring(
-        oddBarHeight *
-          (2 -
-            1 *
-              Math.abs(Math.cos(Math.PI * (progress.value * 10) + Math.PI / 2)))
-      ),
-    };
-  });
+  const array = new Array(arraySize).fill(0);
+  const theme = useTheme();
   return (
     <Box
       flexDirection="row"
+      marginHorizontal="xl"
       justifyContent="space-between"
       alignItems="center"
       height={evenBarHeight}
     >
-      {array.map((_, idx) => (
-        <Box
-          key={idx}
-          width={barWidth}
-          height={idx % 2 === 1 ? oddBarHeight : evenBarHeight}
-          backgroundColor="mainForeground"
-        />
-      ))}
-      <Box style={{ ...StyleSheet.absoluteFillObject }} justifyContent="center">
-        <AnimatedBox
-          height={evenBarHeight}
-          width={barWidth}
-          backgroundColor="primary"
-          style={animatedStyle}
-        />
-      </Box>
+      {array.map((_, idx) => {
+        const isOdd = idx % 2 === 1;
+        const barHeight = isOdd ? oddBarHeight : evenBarHeight;
+        const animatedStyle = useAnimatedStyle(() => {
+          const isActive =
+            idx <= progress.value * arraySize &&
+            progress.value * arraySize <= idx + 1;
+          return {
+            backgroundColor: isActive
+              ? theme.colors.tertiary
+              : theme.colors.baseDescrition,
+            height: withTiming(!isActive ? barHeight : activeBarHeight),
+            width: withTiming(!isActive ? barWidth : activeBarWidth),
+            marginLeft: withTiming(!isActive ? 1 : 0),
+            marginRight: withTiming(!isActive ? 1 : 0),
+            borderRadius: 2,
+          };
+        });
+        return <AnimatedBox key={idx} width={barWidth} style={animatedStyle} />;
+      })}
     </Box>
   );
 };

@@ -13,6 +13,7 @@ const palette = {
   beigePrimary: "#FAAA8D",
   bluePrimary: "#50B2C0",
   purplePrimary: "#9369C9",
+  greyPrimary: "#ADB5BD",
 
   black: "#201E1F",
   white: "#FEEFDD",
@@ -26,6 +27,7 @@ const theme = createTheme({
     secondary: palette.bluePrimary,
     tertiary: palette.purplePrimary,
     baseText: palette.black,
+    baseDescrition: palette.greyPrimary,
     baseTitle: palette.bluePrimary,
   },
   spacing: {
