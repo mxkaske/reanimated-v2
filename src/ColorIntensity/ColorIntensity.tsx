@@ -25,10 +25,10 @@ import CircularAnimation from "../components/CircularAnimation";
 
 const AnimatedBox = Animated.createAnimatedComponent(Box);
 
-interface SmartHomeProps {}
-const SmartHome = () => {
+interface ColorIntensityProps {}
+const ColorIntensity = () => {
   const theme = useTheme();
-  const progress = useSharedValue(0); // 0 to 1
+  const progress = useSharedValue(0.5); // 0 to 1
   const dragged = useSharedValue(false);
   const animatedStyle = useAnimatedStyle(() => ({
     opacity: progress.value,
@@ -58,7 +58,7 @@ const SmartHome = () => {
             )}
           />
         </Box>
-        <AnimatedBox
+        <Box
           style={{ ...StyleSheet.absoluteFillObject }}
           alignItems="center"
           justifyContent="center"
@@ -67,12 +67,10 @@ const SmartHome = () => {
             <Text color="mainBackground">
               <Icon name="code" />
               {` with `}
-              <Icon
-                name="heart" //color={theme.colors.primary}
-              />
+              <Icon name="heart" color={theme.colors.primary} />
             </Text>
           </AnimatedBox>
-        </AnimatedBox>
+        </Box>
         <Box height={1} backgroundColor="mainBackground" />
         <Box
           style={{ ...StyleSheet.absoluteFillObject }}
@@ -158,7 +156,7 @@ const Circle = ({ progress, dragged }: CircleProps) => {
   const { width } = useWindowDimensions();
   const minPosition = 0;
   const maxPosition = width - size;
-  const x = useSharedValue(0);
+  const x = useSharedValue(maxPosition * progress.value);
   const pressed = useSharedValue(false);
   const gestureHandler = useAnimatedGestureHandler<Record<string, number>>({
     onStart: (_, ctx) => {
@@ -232,14 +230,22 @@ interface NumberProps {
 
 const Number = ({ progress }: NumberProps) => {
   const animatedProps = useDerivedValue(
-    () => `${(progress.value * 100).toFixed(0)}%`
+    () => `${(progress.value * 100).toFixed(0)}`
   );
   return (
     <Box alignItems="center" padding="l">
-      <ReText
-        text={animatedProps}
-        style={{ ...theme.textVariants.title, color: theme.colors.tertiary }}
-      />
+      <Box flexDirection="row" alignItems="flex-end">
+        <ReText
+          text={animatedProps}
+          style={{
+            ...theme.textVariants.title,
+            color: theme.colors.tertiary,
+          }}
+        />
+        <Text color="baseDescription" style={{ paddingBottom: 2 }}>
+          %
+        </Text>
+      </Box>
       <Text variant="description">Color Intensity</Text>
     </Box>
   );
@@ -248,7 +254,7 @@ const Number = ({ progress }: NumberProps) => {
 const barWidth = 1;
 const oddBarHeight = 20;
 const evenBarHeight = oddBarHeight * 1.5;
-const activeBarHeight = oddBarHeight * 2;
+const activeBarHeight = oddBarHeight * 2.5;
 const activeBarWidth = 3;
 const arraySize = 21;
 
@@ -292,4 +298,4 @@ const NumberBar = ({ progress, dragged }: NumberBarProps) => {
   );
 };
 
-export default SmartHome;
+export default ColorIntensity;

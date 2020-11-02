@@ -7,7 +7,7 @@ import Home from "../Home";
 import RoundedIconButton from "./RoundedIconButton";
 import { useTheme } from "@shopify/restyle";
 import { ScrollAnimation } from "../ScrollAnimation";
-import { SmartHome } from "../SmartHome";
+import { ColorIntensity } from "../ColorIntensity";
 
 const AppStack = createStackNavigator<AppRoutes>();
 
@@ -50,8 +50,8 @@ const AppContainer = ({ darkMode, setDarkMode }: AppContainer) => {
         options={{ headerShown: false }}
       />
       <AppStack.Screen
-        name="SmartHome"
-        component={SmartHome}
+        name="ColorIntensity"
+        component={ColorIntensity}
         options={{ gestureEnabled: false }}
       />
     </AppStack.Navigator>

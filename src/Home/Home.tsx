@@ -23,8 +23,8 @@ const examples: Screen[] = [
     screen: "ScrollAnimation",
   },
   {
-    label: "Smart Home",
-    screen: "SmartHome",
+    label: "Color Intensity Animation",
+    screen: "ColorIntensity",
   },
 ];
 
