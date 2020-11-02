@@ -33,6 +33,9 @@ const SmartHome = () => {
   const animatedStyle = useAnimatedStyle(() => ({
     opacity: progress.value,
   }));
+  const animatedTextStyle = useAnimatedStyle(() => ({
+    transform: [{ scaleX: withTiming(progress.value === 1 ? 1 : 0) }],
+  }));
   return (
     <Box flex={1} backgroundColor="mainBackground">
       <Box flex={1}>
@@ -48,8 +51,8 @@ const SmartHome = () => {
           justifyContent="center"
         >
           <CircularAnimation
-            size={300}
-            smallSize={80}
+            size={150}
+            smallSize={0}
             doAnimation={useDerivedValue(() =>
               progress.value === 1 ? true : false
             )}
@@ -60,11 +63,15 @@ const SmartHome = () => {
           alignItems="center"
           justifyContent="center"
         >
-          <Text color="mainBackground">
-            <Icon name="code" />
-            {` with `}
-            <Icon name="heart" color={theme.colors.primary} />
-          </Text>
+          <AnimatedBox style={animatedTextStyle}>
+            <Text color="mainBackground">
+              <Icon name="code" />
+              {` with `}
+              <Icon
+                name="heart" //color={theme.colors.primary}
+              />
+            </Text>
+          </AnimatedBox>
         </AnimatedBox>
         <Box height={1} backgroundColor="mainBackground" />
         <Box
