@@ -34,7 +34,9 @@ const ColorIntensity = () => {
     opacity: progress.value,
   }));
   const animatedTextStyle = useAnimatedStyle(() => ({
-    transform: [{ scaleX: withTiming(progress.value === 1 ? 1 : 0) }],
+    transform: [
+      { scaleX: progress.value === 1 ? withSpring(1) : withTiming(0) },
+    ],
   }));
   return (
     <Box flex={1} backgroundColor="mainBackground">
