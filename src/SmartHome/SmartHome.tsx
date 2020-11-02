@@ -2,7 +2,10 @@ import React from "react";
 import { Pressable, StyleSheet, useWindowDimensions } from "react-native";
 import {
   BaseButton,
+  LongPressGestureHandler,
   PanGestureHandler,
+  State,
+  TapGestureHandler,
   TouchableWithoutFeedback,
 } from "react-native-gesture-handler";
 import Animated, {
@@ -15,13 +18,16 @@ import Animated, {
 } from "react-native-reanimated";
 import { Box, Text, useTheme } from "../components";
 import { ReText } from "react-native-redash";
-import { Path, Rect, Svg } from "react-native-svg";
+import { Feather as Icon } from "@expo/vector-icons";
+import { Path, Svg } from "react-native-svg";
 import theme from "../components/Theme";
+import CircularAnimation from "../components/CircularAnimation";
 
 const AnimatedBox = Animated.createAnimatedComponent(Box);
 
 interface SmartHomeProps {}
 const SmartHome = () => {
+  const theme = useTheme();
   const progress = useSharedValue(0); // 0 to 1
   const dragged = useSharedValue(false);
   const animatedStyle = useAnimatedStyle(() => ({
@@ -36,6 +42,30 @@ const SmartHome = () => {
           backgroundColor="tertiary"
           style={animatedStyle}
         />
+        <Box
+          style={{ ...StyleSheet.absoluteFillObject }}
+          alignItems="center"
+          justifyContent="center"
+        >
+          <CircularAnimation
+            size={300}
+            smallSize={80}
+            doAnimation={useDerivedValue(() =>
+              progress.value === 1 ? true : false
+            )}
+          />
+        </Box>
+        <AnimatedBox
+          style={{ ...StyleSheet.absoluteFillObject }}
+          alignItems="center"
+          justifyContent="center"
+        >
+          <Text color="mainBackground">
+            <Icon name="code" />
+            {` with `}
+            <Icon name="heart" color={theme.colors.primary} />
+          </Text>
+        </AnimatedBox>
         <Box height={1} backgroundColor="mainBackground" />
         <Box
           style={{ ...StyleSheet.absoluteFillObject }}
@@ -69,12 +99,16 @@ const Wave = ({ progress }: WaveProps) => {
   const { width: windowWidth } = useWindowDimensions();
   const height = 90;
   const width = 220;
+  const circleSize = 60;
   const animatedStyle = useAnimatedStyle(() => {
     return {
       transform: [
         {
           translateX: withSpring(
-            -windowWidth + progress.value * windowWidth - width
+            -windowWidth +
+              progress.value * (windowWidth - circleSize) -
+              width / 2 +
+              circleSize / 2
           ),
         },
       ],
@@ -129,7 +163,7 @@ const Circle = ({ progress, dragged }: CircleProps) => {
       const newX =
         position >= minPosition
           ? position <= maxPosition
-            ? ctx.startX + event.translationX
+            ? position
             : maxPosition
           : minPosition;
       x.value = newX;
@@ -154,7 +188,16 @@ const Circle = ({ progress, dragged }: CircleProps) => {
       ],
     };
   });
-  const togglePress = () => null;
+  const togglePress = () => (pressed.value = !pressed.value);
+  const onHandlerStateChange = ({ nativeEvent }) => {
+    if (nativeEvent.state === State.ACTIVE) {
+      console.log("active");
+    } else if (nativeEvent.state === State.BEGAN) {
+      console.log("began");
+    } else {
+      console.log("else");
+    }
+  };
   return (
     <PanGestureHandler onGestureEvent={gestureHandler}>
       <AnimatedBox
@@ -190,7 +233,7 @@ const Number = ({ progress }: NumberProps) => {
         text={animatedProps}
         style={{ ...theme.textVariants.title, color: theme.colors.tertiary }}
       />
-      <Text variant="description">Light Intensity</Text>
+      <Text variant="description">Color Intensity</Text>
     </Box>
   );
 };
