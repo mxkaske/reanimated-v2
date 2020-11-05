@@ -22,6 +22,7 @@ import { Feather as Icon } from "@expo/vector-icons";
 import { Path, Svg } from "react-native-svg";
 import theme from "../components/Theme";
 import CircularAnimation from "../components/CircularAnimation";
+import { Paths } from "./Paths";
 
 const AnimatedBox = Animated.createAnimatedComponent(Box);
 
@@ -78,7 +79,7 @@ const ColorIntensity = () => {
           style={{ ...StyleSheet.absoluteFillObject }}
           justifyContent="flex-end"
         >
-          <Wave progress={progress} />
+          <Paths progress={progress} />
         </Box>
         <Box
           style={{ ...StyleSheet.absoluteFillObject }}
@@ -112,8 +113,7 @@ const Wave = ({ progress }: WaveProps) => {
       transform: [
         {
           translateX: withSpring(
-            -windowWidth +
-              progress.value * (windowWidth - circleSize) -
+            progress.value * (windowWidth - circleSize) -
               width / 2 +
               circleSize / 2
           ),
@@ -122,22 +122,22 @@ const Wave = ({ progress }: WaveProps) => {
     };
   });
   return (
-    <AnimatedBox style={animatedStyle}>
-      <Svg height={height + 1} width={3 * windowWidth}>
+    <AnimatedBox //style={animatedStyle}
+    >
+      <Svg height={height + 1} width={windowWidth}>
         <Path
           d={`
-        M0 ${height}
-        L ${windowWidth} ${height},
-        C${windowWidth + width / 8} ${height},
-        ${windowWidth + width / 8} ${height},
-        ${windowWidth + width / 4} ${height / 2}, 
-        C${windowWidth + (width * 3) / 8} 0, 
-        ${windowWidth + (width * 5) / 8} 0, 
-        ${windowWidth + (width * 3) / 4} ${height / 2},
-        C${windowWidth + (width * 7) / 8} ${height},
-        ${windowWidth + (width * 7) / 8} ${height},
-        ${windowWidth + width} ${height}, 
-        L${3 * windowWidth} ${height}
+        M0 ${height},
+        C${width / 8} ${height},
+        ${width / 8} ${height},
+        ${width / 4} ${height / 2}, 
+        C${(width * 3) / 8} 0, 
+        ${(width * 5) / 8} 0, 
+        ${(width * 6) / 8} ${height / 2},
+        C${(width * 7) / 8} ${height},
+        ${(width * 7) / 8} ${height},
+        ${width} ${height}, 
+        L${windowWidth} ${height}
         `}
           fill={theme.colors.mainBackground}
           stroke={theme.colors.tertiary}
