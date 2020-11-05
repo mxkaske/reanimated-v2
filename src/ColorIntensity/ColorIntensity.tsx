@@ -215,6 +215,7 @@ const Number = ({ progress }: NumberProps) => {
         <AnimatedTextInput
           underlineColorAndroid="transparent"
           editable={false}
+          value={(progress.value * 100).toFixed(0)}
           style={animatedStyle}
           {...{ animatedProps }}
         />
