@@ -27,7 +27,7 @@ const theme = createTheme({
     secondary: palette.bluePrimary,
     tertiary: palette.purplePrimary,
     baseText: palette.black,
-    baseDescription: palette.greyPrimary,
+    baseDescription: palette.black,
     baseTitle: palette.bluePrimary,
   },
   spacing: {
@@ -82,7 +82,7 @@ const darkTheme = {
     tertiary: palette.purplePrimary,
     baseText: palette.white,
     baseTitle: palette.redPrimary,
-    baseDescription: palette.greyPrimary,
+    baseDescription: palette.white,
   },
 };
 

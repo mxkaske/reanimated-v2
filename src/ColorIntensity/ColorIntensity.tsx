@@ -1,13 +1,6 @@
 import React from "react";
-import { Pressable, StyleSheet, useWindowDimensions } from "react-native";
-import {
-  BaseButton,
-  LongPressGestureHandler,
-  PanGestureHandler,
-  State,
-  TapGestureHandler,
-  TouchableWithoutFeedback,
-} from "react-native-gesture-handler";
+import { StyleSheet, useWindowDimensions, TextInput } from "react-native";
+import { PanGestureHandler } from "react-native-gesture-handler";
 import Animated, {
   useSharedValue,
   useAnimatedGestureHandler,
@@ -15,16 +8,17 @@ import Animated, {
   withTiming,
   useDerivedValue,
   withSpring,
+  useAnimatedProps,
 } from "react-native-reanimated";
+import { useHeaderHeight } from "@react-navigation/stack";
 import { Box, Text, useTheme } from "../components";
-import { ReText } from "react-native-redash";
+import { ReText, mixColor } from "react-native-redash";
 import { Feather as Icon } from "@expo/vector-icons";
-import { Path, Svg } from "react-native-svg";
 import theme from "../components/Theme";
 import CircularAnimation from "../components/CircularAnimation";
-import { Paths } from "./Paths";
 
 const AnimatedBox = Animated.createAnimatedComponent(Box);
+const AnimatedTextInput = Animated.createAnimatedComponent(TextInput);
 
 interface ColorIntensityProps {}
 const ColorIntensity = () => {
@@ -41,110 +35,85 @@ const ColorIntensity = () => {
   }));
   return (
     <Box flex={1} backgroundColor="mainBackground">
-      <Box flex={1}>
-        <AnimatedBox
-          flex={1}
-          justifyContent="flex-end"
-          backgroundColor="tertiary"
-          style={animatedStyle}
-        />
-        <Box
-          style={{ ...StyleSheet.absoluteFillObject }}
-          alignItems="center"
-          justifyContent="center"
-        >
-          <CircularAnimation
-            size={150}
-            smallSize={0}
-            doAnimation={useDerivedValue(() =>
-              progress.value === 1 ? true : false
-            )}
-          />
-        </Box>
-        <Box
-          style={{ ...StyleSheet.absoluteFillObject }}
-          alignItems="center"
-          justifyContent="center"
-        >
-          <AnimatedBox style={animatedTextStyle}>
-            <Text color="mainBackground">
-              <Icon name="code" />
-              {` with `}
-              <Icon name="heart" color={theme.colors.primary} />
-            </Text>
-          </AnimatedBox>
-        </Box>
-        <Box height={1} backgroundColor="mainBackground" />
-        <Box
-          style={{ ...StyleSheet.absoluteFillObject }}
-          justifyContent="flex-end"
-        >
-          <Paths progress={progress} />
-        </Box>
-        <Box
-          style={{ ...StyleSheet.absoluteFillObject }}
-          justifyContent="flex-end"
-        >
-          <Circle progress={progress} dragged={dragged} />
-        </Box>
+      <Background progress={progress} />
+      <Box flex={1} justifyContent="center" alignItems="center">
+        <TextEnd progress={progress} />
       </Box>
       <Box flex={1}>
         <Box flex={1} justifyContent="center">
           <Number progress={progress} />
           <NumberBar progress={progress} dragged={dragged} />
         </Box>
+        <Box flex={1} justifyContent="center">
+          <Circle progress={progress} dragged={dragged} />
+        </Box>
       </Box>
     </Box>
   );
 };
 
-interface WaveProps {
+interface BackgroundProps {
   progress: Animated.SharedValue<number>;
 }
 
-const Wave = ({ progress }: WaveProps) => {
-  const theme = useTheme();
-  const { width: windowWidth } = useWindowDimensions();
-  const height = 90;
-  const width = 220;
-  const circleSize = 60;
-  const animatedStyle = useAnimatedStyle(() => {
-    return {
-      transform: [
-        {
-          translateX: withSpring(
-            progress.value * (windowWidth - circleSize) -
-              width / 2 +
-              circleSize / 2
-          ),
-        },
-      ],
-    };
-  });
+const Background = ({ progress }: BackgroundProps) => {
+  const headerHeight = useHeaderHeight();
+  const { height: windowHeight } = useWindowDimensions();
+  const animatedStyle = useAnimatedStyle(() => ({
+    opacity: progress.value,
+    height: withSpring((windowHeight - headerHeight) * progress.value, {
+      damping: 14,
+      mass: 1,
+      stiffness: 100,
+    }),
+  }));
   return (
-    <AnimatedBox //style={animatedStyle}
-    >
-      <Svg height={height + 1} width={windowWidth}>
-        <Path
-          d={`
-        M0 ${height},
-        C${width / 8} ${height},
-        ${width / 8} ${height},
-        ${width / 4} ${height / 2}, 
-        C${(width * 3) / 8} 0, 
-        ${(width * 5) / 8} 0, 
-        ${(width * 6) / 8} ${height / 2},
-        C${(width * 7) / 8} ${height},
-        ${(width * 7) / 8} ${height},
-        ${width} ${height}, 
-        L${windowWidth} ${height}
-        `}
-          fill={theme.colors.mainBackground}
-          stroke={theme.colors.tertiary}
-          strokeWidth={2}
+    <Box style={{ ...StyleSheet.absoluteFillObject }} justifyContent="flex-end">
+      <Box height={3} backgroundColor="tertiary" />
+      <AnimatedBox backgroundColor="tertiary" style={animatedStyle} />
+    </Box>
+  );
+};
+
+interface TextEndProps {
+  progress: Animated.SharedValue<number>;
+}
+
+const TextEnd = ({ progress }: TextEndProps) => {
+  const animatedTextStyle = useAnimatedStyle(() => ({
+    transform: [
+      { scaleX: progress.value === 1 ? withSpring(1) : withTiming(0) },
+    ],
+  }));
+  return (
+    <>
+      <Box
+        style={{ ...StyleSheet.absoluteFillObject }}
+        alignItems="center"
+        justifyContent="center"
+      >
+        <CircularAnimation
+          size={150}
+          smallSize={0}
+          doAnimation={useDerivedValue(() =>
+            progress.value === 1 ? true : false
+          )}
         />
-      </Svg>
-    </AnimatedBox>
+      </Box>
+      <Box
+        style={{ ...StyleSheet.absoluteFillObject }}
+        alignItems="center"
+        justifyContent="center"
+      >
+        <AnimatedBox style={animatedTextStyle}>
+          <Text color="mainBackground">
+            <Icon name="code" />
+            {` with `}
+            <Icon name="heart" color={theme.colors.primary} />
+          </Text>
+        </AnimatedBox>
+      </Box>
+    </>
   );
 };
 
@@ -195,16 +164,7 @@ const Circle = ({ progress, dragged }: CircleProps) => {
       ],
     };
   });
-  const togglePress = () => (pressed.value = !pressed.value);
-  const onHandlerStateChange = ({ nativeEvent }) => {
-    if (nativeEvent.state === State.ACTIVE) {
-      console.log("active");
-    } else if (nativeEvent.state === State.BEGAN) {
-      console.log("began");
-    } else {
-      console.log("else");
-    }
-  };
+
   return (
     <PanGestureHandler onGestureEvent={gestureHandler}>
       <AnimatedBox
@@ -213,7 +173,7 @@ const Circle = ({ progress, dragged }: CircleProps) => {
         width={size}
         borderRadius={size / 2}
         style={animatedStyle}
-        shadowColor="mainForeground"
+        shadowColor="mainBackground"
         shadowOffset={{
           width: 0,
           height: 2,
@@ -231,18 +191,32 @@ interface NumberProps {
 }
 
 const Number = ({ progress }: NumberProps) => {
-  const animatedProps = useDerivedValue(
-    () => `${(progress.value * 100).toFixed(0)}`
+  const theme = useTheme();
+  const color = useDerivedValue(() =>
+    mixColor(
+      progress.value,
+      theme.colors.tertiary,
+      theme.colors.baseDescription
+    )
   );
+  const animatedProps = useAnimatedProps(() => {
+    return {
+      text: `${(progress.value * 100).toFixed(0)}`,
+    };
+  });
+  const animatedStyle = useAnimatedStyle(() => ({
+    fontFamily: "Epilogue-Bold",
+    fontSize: 30,
+    color: color.value,
+  }));
   return (
     <Box alignItems="center" padding="l">
       <Box flexDirection="row" alignItems="flex-end">
-        <ReText
-          text={animatedProps}
-          style={{
-            ...theme.textVariants.title,
-            color: theme.colors.tertiary,
-          }}
+        <AnimatedTextInput
+          underlineColorAndroid="transparent"
+          editable={false}
+          style={animatedStyle}
+          {...{ animatedProps }}
         />
         <Text color="baseDescription" style={{ paddingBottom: 2 }}>
           %
@@ -257,7 +231,7 @@ const barWidth = 1;
 const oddBarHeight = 20;
 const evenBarHeight = oddBarHeight * 1.5;
 const activeBarHeight = oddBarHeight * 2.5;
-const activeBarWidth = 3;
+const activeBarWidth = 4;
 const arraySize = 21;
 
 interface NumberBarProps {
@@ -292,6 +266,8 @@ const NumberBar = ({ progress, dragged }: NumberBarProps) => {
             marginLeft: !isActive ? 1 : 0,
             marginRight: !isActive ? 1 : 0,
             borderRadius: 2,
+            borderColor: theme.colors.mainBackground,
+            borderWidth: isActive ? 1 : 0,
           };
         });
         return <AnimatedBox key={idx} width={barWidth} style={animatedStyle} />;
