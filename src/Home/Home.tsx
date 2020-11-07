@@ -26,6 +26,10 @@ const examples: Screen[] = [
     label: "Color Intensity Animation",
     screen: "ColorIntensity",
   },
+  {
+    label: "Loading",
+    screen: "Loading",
+  },
 ];
 
 const Home = ({ navigation }: AppNavigationProps<"Home">) => {

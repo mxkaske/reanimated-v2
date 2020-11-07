@@ -8,6 +8,7 @@ import RoundedIconButton from "./RoundedIconButton";
 import { useTheme } from "@shopify/restyle";
 import { ScrollAnimation } from "../ScrollAnimation";
 import { ColorIntensity } from "../ColorIntensity";
+import { Loading } from "../Loading";
 
 const AppStack = createStackNavigator<AppRoutes>();
 
@@ -54,6 +55,7 @@ const AppContainer = ({ darkMode, setDarkMode }: AppContainer) => {
         component={ColorIntensity}
         options={{ gestureEnabled: false }}
       />
+      <AppStack.Screen name="Loading" component={Loading} />
     </AppStack.Navigator>
   );
 };

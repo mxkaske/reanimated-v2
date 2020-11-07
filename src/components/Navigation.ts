@@ -11,4 +11,5 @@ export type AppRoutes = {
   DefaultAnimation: undefined;
   ScrollAnimation: undefined;
   ColorIntensity: undefined;
+  Loading: undefined;
 };
