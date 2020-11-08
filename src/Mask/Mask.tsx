@@ -16,21 +16,9 @@ const Mask = () => {
       alignItems="center"
       backgroundColor="mainBackground"
     >
-      <Box
-        height={radius * 2}
-        width={radius * 2}
-        //@ts-expect-error
-        borderRadius={radius}
-        overflow="hidden"
-      >
-        <Box flex={1} backgroundColor="secondary" />
-        <Box
-          width={`${100 * progress}%`}
-          backgroundColor="tertiary"
-          style={{
-            ...StyleSheet.absoluteFillObject,
-          }}
-        />
+      <Box flex={1} flexDirection="row">
+        <Box width={`${100 * progress}%`} backgroundColor="secondary" />
+        <Box flex={1} backgroundColor="tertiary" />
         <MaskedView
           style={{ ...StyleSheet.absoluteFillObject }}
           maskElement={maskElement}
