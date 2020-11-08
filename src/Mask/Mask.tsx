@@ -13,11 +13,8 @@ import Animated, {
 import faker from "faker";
 import RoundedIcon from "../components/RoundedIcon";
 
-const radius = 50;
-const staticPropgress = 0.4;
 const AnimatedBox = Animated.createAnimatedComponent(Box);
 
-interface MaskProps {}
 const Mask = () => {
   const x = useSharedValue<number>(50);
   const { width } = useWindowDimensions();
@@ -103,21 +100,6 @@ const maskElement = (
   <Box justifyContent="center" style={{ ...StyleSheet.absoluteFillObject }}>
     <Text padding="s">{faker.lorem.paragraphs(10)}</Text>
   </Box>
-);
-
-const Masked = (
-  <MaskedView
-    style={{ ...StyleSheet.absoluteFillObject }}
-    maskElement={maskElement}
-  >
-    <Box flex={1} flexDirection="row">
-      <Box
-        width={`${100 * staticPropgress}%`}
-        backgroundColor="mainBackground"
-      />
-      <Box flex={1} backgroundColor="mainForeground" />
-    </Box>
-  </MaskedView>
 );
 
 export default Mask;
