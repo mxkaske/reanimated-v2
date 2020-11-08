@@ -4,7 +4,7 @@ import { Box, Text, useTheme } from "../components";
 import MaskedView from "@react-native-community/masked-view";
 
 const radius = 50;
-const progress = 0.6;
+const progress = 0.4;
 
 interface MaskProps {}
 const Mask = () => {
@@ -35,17 +35,13 @@ const Mask = () => {
           style={{ ...StyleSheet.absoluteFillObject }}
           maskElement={maskElement}
         >
-          <Box
-            backgroundColor="mainForeground"
-            style={{ ...StyleSheet.absoluteFillObject }}
-          />
-          <Box
-            backgroundColor="mainBackground"
-            width={`${100 * progress}%`}
-            style={{
-              ...StyleSheet.absoluteFillObject,
-            }}
-          />
+          <Box flex={1} flexDirection="row">
+            <Box
+              width={`${100 * progress}%`}
+              backgroundColor="mainBackground"
+            />
+            <Box flex={1} backgroundColor="mainForeground" />
+          </Box>
         </MaskedView>
       </Box>
     </Box>
@@ -54,9 +50,7 @@ const Mask = () => {
 
 const maskElement = (
   <Box justifyContent="center" style={{ ...StyleSheet.absoluteFillObject }}>
-    <Text style={{ marginHorizontal: 15, fontSize: 13 }}>
-      Text color change
-    </Text>
+    <Text padding="s">Text color change</Text>
   </Box>
 );
 
