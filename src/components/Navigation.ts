@@ -13,4 +13,5 @@ export type AppRoutes = {
   ColorIntensity: undefined;
   Loading: undefined;
   Pagination: undefined;
+  Mask: undefined;
 };

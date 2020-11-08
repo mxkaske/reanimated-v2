@@ -34,6 +34,10 @@ const examples: Screen[] = [
     label: "Pagination",
     screen: "Pagination",
   },
+  {
+    label: "MaskedView",
+    screen: "Mask",
+  },
 ];
 
 const Home = ({ navigation }: AppNavigationProps<"Home">) => {

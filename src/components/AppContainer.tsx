@@ -11,6 +11,7 @@ import { ColorIntensity } from "../ColorIntensity";
 import { Loading } from "../Loading";
 import App from "../../App";
 import { Pagination } from "../Pagination";
+import { Mask } from "../Mask";
 
 const AppStack = createStackNavigator<AppRoutes>();
 
@@ -59,6 +60,7 @@ const AppContainer = ({ darkMode, setDarkMode }: AppContainer) => {
       />
       <AppStack.Screen name="Loading" component={Loading} />
       <AppStack.Screen name="Pagination" component={Pagination} />
+      <AppStack.Screen name="Mask" component={Mask} />
     </AppStack.Navigator>
   );
 };
