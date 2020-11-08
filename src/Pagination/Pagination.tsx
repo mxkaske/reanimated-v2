@@ -3,6 +3,7 @@ import { StyleSheet, View } from "react-native";
 import { BaseButton } from "react-native-gesture-handler";
 import Animated, {
   useAnimatedStyle,
+  useDerivedValue,
   useSharedValue,
   withTiming,
 } from "react-native-reanimated";
@@ -17,10 +18,13 @@ const width = 200;
 interface PaginationProps {}
 const Pagination = () => {
   const selectedIndex = useSharedValue<number>(0);
+  const translateX = useDerivedValue(() =>
+    withTiming((size / 2 + width / 4) * selectedIndex.value, { duration: 2000 })
+  );
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [
       {
-        translateX: withTiming((size / 2 + width / 4) * selectedIndex.value),
+        translateX: translateX.value,
       },
     ],
   }));
@@ -40,7 +44,9 @@ const Pagination = () => {
           return (
             <BaseButton
               key={index}
-              onPress={() => (selectedIndex.value = index)}
+              onPress={() => {
+                selectedIndex.value = index;
+              }}
             >
               <AnimatedBox
                 width={size}
@@ -60,7 +66,14 @@ const Pagination = () => {
           //backgroundColor="tertiary"
           style={animatedStyle}
         >
-          <Circle />
+          <Circle
+            progress={useDerivedValue(() => {
+              const xOffset = selectedIndex.value * (size / 2 + width / 4);
+              return translateX.value > 0 && xOffset > 0
+                ? translateX.value / xOffset
+                : 1;
+            })}
+          />
         </AnimatedBox>
       </Box>
     </Box>
