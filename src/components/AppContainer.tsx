@@ -60,7 +60,11 @@ const AppContainer = ({ darkMode, setDarkMode }: AppContainer) => {
       />
       <AppStack.Screen name="Loading" component={Loading} />
       <AppStack.Screen name="Pagination" component={Pagination} />
-      <AppStack.Screen name="Mask" component={Mask} />
+      <AppStack.Screen
+        name="Mask"
+        component={Mask}
+        options={{ gestureEnabled: false }}
+      />
     </AppStack.Navigator>
   );
 };
