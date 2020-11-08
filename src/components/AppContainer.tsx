@@ -9,6 +9,8 @@ import { useTheme } from "@shopify/restyle";
 import { ScrollAnimation } from "../ScrollAnimation";
 import { ColorIntensity } from "../ColorIntensity";
 import { Loading } from "../Loading";
+import App from "../../App";
+import { Pagination } from "../Pagination";
 
 const AppStack = createStackNavigator<AppRoutes>();
 
@@ -56,6 +58,7 @@ const AppContainer = ({ darkMode, setDarkMode }: AppContainer) => {
         options={{ gestureEnabled: false }}
       />
       <AppStack.Screen name="Loading" component={Loading} />
+      <AppStack.Screen name="Pagination" component={Pagination} />
     </AppStack.Navigator>
   );
 };

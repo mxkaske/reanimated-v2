@@ -12,4 +12,5 @@ export type AppRoutes = {
   ScrollAnimation: undefined;
   ColorIntensity: undefined;
   Loading: undefined;
+  Pagination: undefined;
 };

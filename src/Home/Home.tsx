@@ -30,6 +30,10 @@ const examples: Screen[] = [
     label: "Loading",
     screen: "Loading",
   },
+  {
+    label: "Pagination",
+    screen: "Pagination",
+  },
 ];
 
 const Home = ({ navigation }: AppNavigationProps<"Home">) => {
