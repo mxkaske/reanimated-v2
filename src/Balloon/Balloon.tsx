@@ -21,6 +21,7 @@ const size = 50;
 const borderSize = 8;
 const AnimatedBox = Animated.createAnimatedComponent(Box);
 const AnimatedSvg = Animated.createAnimatedComponent(Svg);
+const AnimatedText = Animated.createAnimatedComponent(Text);
 const sliderConfig = {
   height: 2,
   width: width * 0.7,
@@ -57,6 +58,11 @@ const Balloon = () => {
   const isActive = useDerivedValue(
     () => isGestureActive.value || isPressActive.value
   );
+
+  const textStyle = useAnimatedStyle(() => ({
+    fontSize: withTiming(isActive.value ? 20 : 2),
+  }));
+
   const style = useAnimatedStyle(() => {
     const currentSize = isActive.value ? size : size * (1 / 2);
     return {
@@ -76,6 +82,12 @@ const Balloon = () => {
     };
   });
 
+  const quantity = useDerivedValue(
+    () =>
+      `${Math.round(
+        (translateX.value * sliderConfig.max) / sliderConfig.width
+      )}`
+  );
   const rotate = useDerivedValue(() =>
     withSpring(rotation.value, { overshootClamping: false })
   );
@@ -86,68 +98,80 @@ const Balloon = () => {
 
   const balloonContainerStyle = useAnimatedStyle(() => ({
     transform: [
-      {
-        translateX: withSpring(translateX.value),
-      },
+      { translateX: translateX.value },
+      { translateY: withTiming(isActive.value ? -balloonSize : 0) },
       { rotate: `${rotate.value}deg` },
     ],
+    //height: withTiming(isActive.value ? balloonSize : 30),
+    //width: withTiming(isActive.value ? balloonSize : 30),
   }));
 
   return (
     <Box flex={1} backgroundColor="mainBackground">
       <Title />
+      <Box height={30}>
+        <AnimatedText style={textStyle}>fontSize</AnimatedText>
+      </Box>
       <Box flex={1} justifyContent="flex-end">
         <Box
-          style={StyleSheet.absoluteFill}
-          bottom={-size / 2}
-          justifyContent="flex-end"
+          height={size}
+          flexDirection="row"
+          backgroundColor="baseDescription"
+          alignItems="center"
         >
-          <AnimatedBox
-            width={balloonSize}
-            height={balloonSize}
-            justifyContent="center"
-            alignItems="center"
-            style={balloonContainerStyle}
-            backgroundColor="baseDescription"
-          >
-            <AnimatedSvg viewBox="0 0 40 30" animatedProps={balloonProps}>
-              <Path
-                fill={theme.colors.tertiary}
-                d="M 20 0 Q 40 0 20 30 Q 0 0 20 0 M 20 30 Q 25 34 20 34 Q 15 34 20 30 Z"
-              />
-            </AnimatedSvg>
-          </AnimatedBox>
-        </Box>
-        <Box height={size} flexDirection="row" justifyContent="center">
-          <SliderLine />
+          <Box flex={1} justifyContent="center">
+            <SliderLine />
+          </Box>
           <Box
             position="absolute"
-            left={(width * 0.3 - size) / 2}
-            height={size}
-            width={size}
+            height={balloonSize}
+            width={balloonSize}
             alignItems="center"
             justifyContent="center"
           >
+            <AnimatedBox
+              position="absolute"
+              left={0}
+              right={0}
+              top={0}
+              bottom={0}
+              width={balloonSize}
+              height={balloonSize}
+              justifyContent="center"
+              alignItems="center"
+              style={balloonContainerStyle}
+              backgroundColor="primary"
+            >
+              <AnimatedSvg viewBox="0 0 40 30" animatedProps={balloonProps}>
+                <Path
+                  fill={theme.colors.tertiary}
+                  d="M 20 0 Q 40 0 20 30 Q 0 0 20 0 M 20 30 Q 25 34 20 34 Q 15 34 20 30 Z"
+                />
+              </AnimatedSvg>
+              <BalloonText quantity={quantity} />
+            </AnimatedBox>
             <PanGestureHandler onGestureEvent={onGestureEvent}>
               <AnimatedBox backgroundColor="tertiary" style={style}>
-                <Pressable
-                  onPressIn={() => {
-                    isPressActive.value = true;
-                  }}
-                  onPressOut={() => {
-                    isPressActive.value = false;
-                  }}
-                  style={{
-                    flex: 1,
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  <AnimatedBox
-                    backgroundColor="mainBackground"
-                    style={innerStyle}
-                  />
-                </Pressable>
+                <Box flex={1}>
+                  <Pressable
+                    onPressIn={() => {
+                      isPressActive.value = true;
+                    }}
+                    onPressOut={() => {
+                      isPressActive.value = false;
+                    }}
+                    style={{
+                      flex: 1,
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    <AnimatedBox
+                      backgroundColor="mainBackground"
+                      style={innerStyle}
+                    />
+                  </Pressable>
+                </Box>
               </AnimatedBox>
             </PanGestureHandler>
           </Box>
@@ -177,12 +201,12 @@ const SliderLine = () => (
   />
 );
 
-const AnimatedText = ({ quantity, theme }) => (
+const BalloonText = ({ quantity }) => (
   <Box
     style={StyleSheet.absoluteFill}
     justifyContent="center"
     alignItems="center"
   >
-    <ReText text={quantity} style={{ color: theme.colors.mainBackground }} />
+    <ReText text={quantity} style={{ color: "black" }} />
   </Box>
 );
