@@ -97,7 +97,9 @@ const Balloon = () => {
 
   const balloonContainerStyle = useAnimatedStyle(() => ({
     transform: [
-      { translateX: translateX.value },
+      {
+        translateX: withSpring(translateX.value - rotation.value * 2),
+      },
       { translateY: withTiming(isActive.value ? -balloonSize : 0) },
       { rotate: `${rotate.value}deg` },
     ],
@@ -236,7 +238,7 @@ const Button = () => {
   return (
     <Box
       width={100}
-      height={40}
+      height={50}
       backgroundColor="secondary"
       style={{ borderRadius: 10 }}
       margin="xl"
