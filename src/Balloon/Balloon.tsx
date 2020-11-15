@@ -1,17 +1,15 @@
 import React from "react";
 import { Dimensions, Pressable, StyleSheet, TextInput } from "react-native";
-import { PanGestureHandler } from "react-native-gesture-handler";
+import { PanGestureHandler, RectButton } from "react-native-gesture-handler";
 import Animated, {
   useAnimatedGestureHandler,
   useAnimatedProps,
   useAnimatedStyle,
   useDerivedValue,
   useSharedValue,
-  withDecay,
   withSpring,
   withTiming,
 } from "react-native-reanimated";
-import { ReText } from "react-native-redash";
 import Svg, { Path } from "react-native-svg";
 import { Box, Text, useTheme } from "../components";
 
@@ -60,11 +58,15 @@ const Balloon = () => {
     () => isGestureActive.value || isPressActive.value
   );
 
-  const style = useAnimatedStyle(() => {
+  const animatedSize = useDerivedValue(() => {
     const currentSize = isActive.value ? size : size * (1 / 2);
+    return withTiming(currentSize);
+  });
+
+  const style = useAnimatedStyle(() => {
     return {
-      width: withTiming(currentSize),
-      height: withTiming(currentSize),
+      width: animatedSize.value,
+      height: animatedSize.value,
       transform: [{ translateX: translateX.value }],
       borderRadius: withTiming(isActive.value ? size / 2 : size * (1 / 6)),
     };
@@ -116,28 +118,14 @@ const Balloon = () => {
           <Box flex={1} justifyContent="center">
             <SliderLine translateX={translateX} />
           </Box>
-          <Box
+          <AnimatedBox
             position="absolute"
             height={balloonSize}
             width={balloonSize}
             alignItems="center"
             justifyContent="center"
           >
-            <AnimatedBox
-              position="absolute"
-              left={0}
-              right={0}
-              top={0}
-              bottom={0}
-              width={balloonSize}
-              height={balloonSize}
-              justifyContent="center"
-              alignItems="center"
-              style={balloonContainerStyle}
-              //backgroundColor="primary"
-              //zIndex={100}
-              //overflow="hidden"
-            >
+            <AnimatedBox position="absolute" style={balloonContainerStyle}>
               <AnimatedSvg viewBox="0 0 40 30" animatedProps={balloonProps}>
                 <Path
                   fill={theme.colors.tertiary}
@@ -168,10 +156,12 @@ const Balloon = () => {
                 </Pressable>
               </AnimatedBox>
             </PanGestureHandler>
-          </Box>
+          </AnimatedBox>
         </Box>
       </Box>
-      <Box flex={1} alignItems="center" justifyContent="center"></Box>
+      <Box flex={1} alignItems="flex-end" justifyContent="flex-end">
+        <Button />
+      </Box>
     </Box>
   );
 };
@@ -190,22 +180,24 @@ interface SliderLineProps {
   translateX: Animated.SharedValue<number>;
 }
 
-const SliderLine = ({ translateX }: SliderLineProps) => (
-  <Box
-    height={sliderConfig.height}
-    width={sliderConfig.width}
-    backgroundColor="baseDescription"
-    alignSelf="center"
-  >
-    <AnimatedBox
+const SliderLine = ({ translateX }: SliderLineProps) => {
+  return (
+    <Box
       height={sliderConfig.height}
-      style={useAnimatedStyle(() => ({
-        width: translateX.value,
-      }))}
-      backgroundColor="tertiary"
-    />
-  </Box>
-);
+      width={sliderConfig.width}
+      backgroundColor="baseDescription"
+      alignSelf="center"
+    >
+      <AnimatedBox
+        height={sliderConfig.height}
+        style={useAnimatedStyle(() => ({
+          width: translateX.value,
+        }))}
+        backgroundColor="tertiary"
+      />
+    </Box>
+  );
+};
 
 interface BalloonTextProps {
   quantity: Animated.SharedValue<string>;
@@ -213,12 +205,15 @@ interface BalloonTextProps {
 }
 
 const BalloonText = ({ quantity, isActive }: BalloonTextProps) => {
+  const theme = useTheme();
   const animatedProps = useAnimatedProps(() => ({
     text: quantity.value,
   }));
 
   const animatedStyle = useAnimatedStyle(() => ({
     fontSize: withTiming(isActive.value ? 18 : 1),
+    color: theme.colors.mainBackground,
+    paddingBottom: 10,
   }));
   return (
     <Box
@@ -233,6 +228,32 @@ const BalloonText = ({ quantity, isActive }: BalloonTextProps) => {
         style={animatedStyle}
         animatedProps={animatedProps}
       />
+    </Box>
+  );
+};
+
+const Button = () => {
+  return (
+    <Box
+      width={100}
+      height={40}
+      backgroundColor="secondary"
+      style={{ borderRadius: 10 }}
+      margin="xl"
+      overflow="hidden"
+    >
+      <RectButton style={{ flex: 1 }} onPress={() => null}>
+        <Box
+          flex={1}
+          flexDirection="row"
+          justifyContent="space-between"
+          alignItems="center"
+          padding="s"
+        >
+          <Text textAlign="center">Next</Text>
+          <Text textAlign="center">+</Text>
+        </Box>
+      </RectButton>
     </Box>
   );
 };
