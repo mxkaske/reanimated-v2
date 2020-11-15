@@ -14,4 +14,5 @@ export type AppRoutes = {
   Loading: undefined;
   Pagination: undefined;
   Mask: undefined;
+  Balloon: undefined;
 };

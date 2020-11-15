@@ -38,6 +38,11 @@ const theme = createTheme({
     xl: 40,
   },
   textVariants: {
+    hero: {
+      fontSize: 40,
+      fontFamily: "Epilogue-Bold",
+      color: "baseTitle",
+    },
     title: {
       fontSize: 28,
       fontFamily: "Epilogue-Bold",

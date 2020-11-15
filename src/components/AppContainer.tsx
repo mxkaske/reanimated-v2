@@ -12,6 +12,7 @@ import { Loading } from "../Loading";
 import App from "../../App";
 import { Pagination } from "../Pagination";
 import { Mask } from "../Mask";
+import { Balloon } from "../Balloon";
 
 const AppStack = createStackNavigator<AppRoutes>();
 
@@ -63,6 +64,11 @@ const AppContainer = ({ darkMode, setDarkMode }: AppContainer) => {
       <AppStack.Screen
         name="Mask"
         component={Mask}
+        options={{ gestureEnabled: false }}
+      />
+      <AppStack.Screen
+        name="Balloon"
+        component={Balloon}
         options={{ gestureEnabled: false }}
       />
     </AppStack.Navigator>

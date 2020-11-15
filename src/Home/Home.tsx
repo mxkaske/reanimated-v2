@@ -1,5 +1,5 @@
 import React from "react";
-import { Image, Dimensions } from "react-native";
+import { Image, Dimensions, ScrollView } from "react-native";
 import { Box, Text } from "../components";
 import { AppNavigationProps, AppRoutes } from "../components/Navigation";
 import BorderlessTap from "../components/BorderlessTap";
@@ -38,6 +38,10 @@ const examples: Screen[] = [
     label: "MaskedView",
     screen: "Mask",
   },
+  {
+    label: "Balloon",
+    screen: "Balloon",
+  },
 ];
 
 const Home = ({ navigation }: AppNavigationProps<"Home">) => {
@@ -47,7 +51,7 @@ const Home = ({ navigation }: AppNavigationProps<"Home">) => {
       backgroundColor="mainBackground"
       justifyContent="space-between"
     >
-      <Box>
+      <ScrollView>
         {examples.map((item) => (
           <BorderlessTap
             key={item.label}
@@ -58,7 +62,7 @@ const Home = ({ navigation }: AppNavigationProps<"Home">) => {
             </Text>
           </BorderlessTap>
         ))}
-      </Box>
+      </ScrollView>
       <Image
         source={assets[0]}
         style={{ width, height: 300 }}
