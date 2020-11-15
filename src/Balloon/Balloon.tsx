@@ -1,5 +1,5 @@
 import React from "react";
-import { Dimensions, Pressable, StyleSheet, View } from "react-native";
+import { Dimensions, Pressable, StyleSheet, TextInput } from "react-native";
 import { PanGestureHandler } from "react-native-gesture-handler";
 import Animated, {
   useAnimatedGestureHandler,
@@ -22,6 +22,7 @@ const borderSize = 8;
 const AnimatedBox = Animated.createAnimatedComponent(Box);
 const AnimatedSvg = Animated.createAnimatedComponent(Svg);
 const AnimatedText = Animated.createAnimatedComponent(Text);
+const AnimatedTextInput = Animated.createAnimatedComponent(TextInput);
 const sliderConfig = {
   height: 2,
   width: width * 0.7,
@@ -59,10 +60,6 @@ const Balloon = () => {
     () => isGestureActive.value || isPressActive.value
   );
 
-  const textStyle = useAnimatedStyle(() => ({
-    fontSize: withTiming(isActive.value ? 20 : 2),
-  }));
-
   const style = useAnimatedStyle(() => {
     const currentSize = isActive.value ? size : size * (1 / 2);
     return {
@@ -92,8 +89,8 @@ const Balloon = () => {
     withSpring(rotation.value, { overshootClamping: false })
   );
   const balloonProps = useAnimatedProps(() => ({
-    height: withTiming(isActive.value ? balloonSize : 30),
-    width: withTiming(isActive.value ? balloonSize : 30),
+    height: withTiming(isActive.value ? balloonSize : 0),
+    width: withTiming(isActive.value ? balloonSize : 0),
   }));
 
   const balloonContainerStyle = useAnimatedStyle(() => ({
@@ -109,18 +106,15 @@ const Balloon = () => {
   return (
     <Box flex={1} backgroundColor="mainBackground">
       <Title />
-      <Box height={30}>
-        <AnimatedText style={textStyle}>fontSize</AnimatedText>
-      </Box>
       <Box flex={1} justifyContent="flex-end">
         <Box
           height={size}
           flexDirection="row"
-          backgroundColor="baseDescription"
+          //backgroundColor="baseDescription"
           alignItems="center"
         >
           <Box flex={1} justifyContent="center">
-            <SliderLine />
+            <SliderLine translateX={translateX} />
           </Box>
           <Box
             position="absolute"
@@ -140,7 +134,9 @@ const Balloon = () => {
               justifyContent="center"
               alignItems="center"
               style={balloonContainerStyle}
-              backgroundColor="primary"
+              //backgroundColor="primary"
+              //zIndex={100}
+              //overflow="hidden"
             >
               <AnimatedSvg viewBox="0 0 40 30" animatedProps={balloonProps}>
                 <Path
@@ -148,30 +144,28 @@ const Balloon = () => {
                   d="M 20 0 Q 40 0 20 30 Q 0 0 20 0 M 20 30 Q 25 34 20 34 Q 15 34 20 30 Z"
                 />
               </AnimatedSvg>
-              <BalloonText quantity={quantity} />
+              <BalloonText quantity={quantity} isActive={isActive} />
             </AnimatedBox>
             <PanGestureHandler onGestureEvent={onGestureEvent}>
               <AnimatedBox backgroundColor="tertiary" style={style}>
-                <Box flex={1}>
-                  <Pressable
-                    onPressIn={() => {
-                      isPressActive.value = true;
-                    }}
-                    onPressOut={() => {
-                      isPressActive.value = false;
-                    }}
-                    style={{
-                      flex: 1,
-                      justifyContent: "center",
-                      alignItems: "center",
-                    }}
-                  >
-                    <AnimatedBox
-                      backgroundColor="mainBackground"
-                      style={innerStyle}
-                    />
-                  </Pressable>
-                </Box>
+                <Pressable
+                  onPressIn={() => {
+                    isPressActive.value = true;
+                  }}
+                  onPressOut={() => {
+                    isPressActive.value = false;
+                  }}
+                  style={{
+                    flex: 1,
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <AnimatedBox
+                    backgroundColor="mainBackground"
+                    style={innerStyle}
+                  />
+                </Pressable>
               </AnimatedBox>
             </PanGestureHandler>
           </Box>
@@ -192,21 +186,53 @@ const Title = () => (
   >{`Choose\nBalloon\nquantity`}</Text>
 );
 
-const SliderLine = () => (
+interface SliderLineProps {
+  translateX: Animated.SharedValue<number>;
+}
+
+const SliderLine = ({ translateX }: SliderLineProps) => (
   <Box
     height={sliderConfig.height}
     width={sliderConfig.width}
-    backgroundColor="tertiary"
+    backgroundColor="baseDescription"
     alignSelf="center"
-  />
-);
-
-const BalloonText = ({ quantity }) => (
-  <Box
-    style={StyleSheet.absoluteFill}
-    justifyContent="center"
-    alignItems="center"
   >
-    <ReText text={quantity} style={{ color: "black" }} />
+    <AnimatedBox
+      height={sliderConfig.height}
+      style={useAnimatedStyle(() => ({
+        width: translateX.value,
+      }))}
+      backgroundColor="tertiary"
+    />
   </Box>
 );
+
+interface BalloonTextProps {
+  quantity: Animated.SharedValue<string>;
+  isActive: Animated.SharedValue<boolean>;
+}
+
+const BalloonText = ({ quantity, isActive }: BalloonTextProps) => {
+  const animatedProps = useAnimatedProps(() => ({
+    text: quantity.value,
+  }));
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    fontSize: withTiming(isActive.value ? 18 : 1),
+  }));
+  return (
+    <Box
+      style={StyleSheet.absoluteFill}
+      justifyContent="center"
+      alignItems="center"
+    >
+      <AnimatedTextInput
+        underlineColorAndroid="transparent"
+        editable={false}
+        value={quantity.value}
+        style={animatedStyle}
+        animatedProps={animatedProps}
+      />
+    </Box>
+  );
+};
