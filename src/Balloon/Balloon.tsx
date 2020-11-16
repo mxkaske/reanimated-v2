@@ -9,18 +9,22 @@ import Animated, {
   useSharedValue,
   withSpring,
   withTiming,
+  withDecay,
+  Easing,
 } from "react-native-reanimated";
 import Svg, { Path } from "react-native-svg";
 import { Feather as Icon } from "@expo/vector-icons";
 import { Box, Text, useTheme } from "../components";
 
 const { width } = Dimensions.get("window");
+const DURATION_MIN = 400;
+const DURATION = 600;
+const DURATION_MAX = 800;
 const balloonSize = 100;
 const size = 50;
-const borderSize = 8;
+const borderSize = 5;
 const AnimatedBox = Animated.createAnimatedComponent(Box);
 const AnimatedSvg = Animated.createAnimatedComponent(Svg);
-const AnimatedText = Animated.createAnimatedComponent(Text);
 const AnimatedTextInput = Animated.createAnimatedComponent(TextInput);
 const sliderConfig = {
   height: 2,
@@ -48,7 +52,7 @@ const Balloon = () => {
             ? translationX + ctx.startX
             : sliderConfig.width
           : 0;
-      rotation.value = -velocityX / 50;
+      rotation.value = -velocityX / 40;
     },
     onEnd: () => {
       isGestureActive.value = false;
@@ -74,7 +78,7 @@ const Balloon = () => {
   });
 
   const innerStyle = useAnimatedStyle(() => {
-    const currentSize = isActive.value ? size - borderSize : size * (1 / 4);
+    const currentSize = isActive.value ? size - borderSize : size * (1 / 6);
     return {
       width: withTiming(currentSize),
       height: withTiming(currentSize),
@@ -92,8 +96,12 @@ const Balloon = () => {
     withSpring(rotation.value, { overshootClamping: false })
   );
   const balloonProps = useAnimatedProps(() => ({
-    height: withTiming(isActive.value ? balloonSize : 0, { duration: 800 }),
-    width: withTiming(isActive.value ? balloonSize : 0, { duration: 800 }),
+    height: withTiming(isActive.value ? balloonSize : 0, {
+      duration: isActive.value ? DURATION_MIN : DURATION,
+    }),
+    width: withTiming(isActive.value ? balloonSize : 0, {
+      duration: isActive.value ? DURATION_MIN : DURATION,
+    }),
   }));
 
   const balloonContainerStyle = useAnimatedStyle(() => ({
@@ -103,25 +111,18 @@ const Balloon = () => {
       },
       {
         translateY: withTiming(isActive.value ? -balloonSize : 0, {
-          duration: 800,
+          duration: isActive.value ? DURATION_MAX : DURATION,
         }),
       },
       { rotate: `${rotate.value}deg` },
     ],
-    //height: withTiming(isActive.value ? balloonSize : 30),
-    //width: withTiming(isActive.value ? balloonSize : 30),
   }));
 
   return (
     <Box flex={1} backgroundColor="mainBackground">
       <Title />
       <Box flex={1} justifyContent="flex-end">
-        <Box
-          height={size}
-          flexDirection="row"
-          //backgroundColor="baseDescription"
-          alignItems="center"
-        >
+        <Box height={size} flexDirection="row" alignItems="center">
           <Box flex={1} justifyContent="center">
             <SliderLine translateX={translateX} />
           </Box>
@@ -218,7 +219,7 @@ const BalloonText = ({ quantity, isActive }: BalloonTextProps) => {
   }));
 
   const animatedStyle = useAnimatedStyle(() => ({
-    fontSize: withTiming(isActive.value ? 18 : 1, { duration: 800 }),
+    fontSize: withTiming(isActive.value ? 18 : 1, { duration: DURATION }),
     color: theme.colors.mainBackground,
     paddingBottom: 10,
   }));
@@ -244,7 +245,8 @@ const Button = () => {
     <Box
       backgroundColor="secondary"
       style={{ borderRadius: 10 }}
-      margin="xl"
+      marginVertical="xl"
+      marginHorizontal="l"
       overflow="hidden"
     >
       <RectButton onPress={() => null}>
