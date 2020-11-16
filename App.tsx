@@ -4,11 +4,13 @@ import AppContainer from "./src/components/AppContainer";
 import { assets as homeAssets } from "./src/Home";
 
 const fonts = {
-  "Epilogue-Bold": require("./assets/fonts/Epilogue-Bold.ttf"),
-  "Epilogue-Light": require("./assets/fonts/Epilogue-Light.ttf"),
-  "Epilogue-Regular": require("./assets/fonts/Epilogue-Regular.ttf"),
-  "Epilogue-Medium": require("./assets/fonts/Epilogue-Medium.ttf"),
-  "Epilogue-SemiBold": require("./assets/fonts/Epilogue-SemiBold.ttf")
+  "Epilogue-Bold": require("./assets/fonts/Epilogue/Epilogue-Bold.ttf"),
+  "Epilogue-Light": require("./assets/fonts/Epilogue/Epilogue-Light.ttf"),
+  "Epilogue-Regular": require("./assets/fonts/Epilogue/Epilogue-Regular.ttf"),
+  "Epilogue-Medium": require("./assets/fonts/Epilogue/Epilogue-Medium.ttf"),
+  "Epilogue-SemiBold": require("./assets/fonts/Epilogue/Epilogue-SemiBold.ttf"),
+  "Poppins-Light": require("./assets/fonts/Poppins/Poppins-Light.ttf"),
+  "Poppins-SemiBold": require("./assets/fonts/Poppins/Poppins-SemiBold.ttf"),
 };
 
 const assets = [...homeAssets];
@@ -19,7 +21,7 @@ export default function App() {
     <ThemeProvider {...{ darkMode }}>
       <LoadAssets {...{ fonts, assets }}>
         <AppContainer
-          setDarkMode={() => setDarkMode(prev => !prev)}
+          setDarkMode={() => setDarkMode((prev) => !prev)}
           {...{ darkMode }}
         />
       </LoadAssets>

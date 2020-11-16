@@ -17,10 +17,12 @@ import { Feather as Icon } from "@expo/vector-icons";
 import { Box, Text, useTheme, Header } from "../components";
 import { AppNavigationProps } from "../components/Navigation";
 
+const d =
+  "M 4 2 A 1 1 0 0 0 0 2 C 0 3 1 4 2 5 C 3 4 4 3 4 2 L 4 2 M 2 5 C 1 6 1.5 6 2 6 C 2.5 6 3 6 2 5 Z";
 const { width } = Dimensions.get("window");
-const DURATION_MIN = 400;
-const DURATION = 600;
-const DURATION_MAX = 800;
+const DURATION_MIN = 300;
+const DURATION = 400;
+const DURATION_MAX = 600;
 const balloonSize = 80;
 const size = 50;
 const borderSize = 5;
@@ -165,10 +167,7 @@ const Balloon = ({ navigation }: AppNavigationProps<"Balloon">) => {
               </PanGestureHandler>
               <AnimatedBox position="absolute" style={balloonContainerStyle}>
                 <AnimatedSvg viewBox="0 0 4 6" animatedProps={balloonProps}>
-                  <Path
-                    fill={theme.colors.tertiary}
-                    d="M 4 2 A 1 1 0 0 0 0 2 C 0 3 1 4 2 5 C 3 4 4 3 4 2 L 4 2 M 2 5 C 1 6 1 6 2 6 C 3 6 3 6 2 5 Z"
-                  />
+                  <Path fill={theme.colors.tertiary} d={d} />
                 </AnimatedSvg>
                 <BalloonText quantity={quantity} isActive={isActive} />
               </AnimatedBox>
@@ -188,8 +187,9 @@ export default Balloon;
 const Title = () => (
   <Text
     variant="hero"
-    color="tertiary"
+    color="mainForeground"
     padding="m"
+    fontFamily="Poppins-SemiBold"
   >{`Choose\nBalloon\nquantity`}</Text>
 );
 
@@ -230,6 +230,7 @@ const BalloonText = ({ quantity, isActive }: BalloonTextProps) => {
   const animatedStyle = useAnimatedStyle(() => ({
     fontSize: withTiming(isActive.value ? 18 : 1, { duration: DURATION }),
     color: theme.colors.mainBackground,
+    fontFamily: "Poppins-Light",
   }));
   return (
     <Box style={StyleSheet.absoluteFill}>
@@ -266,7 +267,7 @@ const Button = () => {
           paddingHorizontal="l"
           width={140}
         >
-          <Text textAlign="center" fontFamily="Epilogue-SemiBold">
+          <Text textAlign="center" fontFamily="Poppins-SemiBold">
             Next
           </Text>
           <Icon

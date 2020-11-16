@@ -100,7 +100,7 @@ interface ThemeProvideProps {
 export const ThemeProvider = ({ children, darkMode }: ThemeProvideProps) => {
   return (
     <ReStyleThemeProvider theme={darkMode ? darkTheme : theme}>
-      <StatusBar hidden={true} style={darkMode ? "light" : "dark"} />
+      <StatusBar style={darkMode ? "light" : "dark"} />
       {children}
     </ReStyleThemeProvider>
   );
