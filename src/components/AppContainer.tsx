@@ -69,7 +69,7 @@ const AppContainer = ({ darkMode, setDarkMode }: AppContainer) => {
       <AppStack.Screen
         name="Balloon"
         component={Balloon}
-        options={{ gestureEnabled: false }}
+        options={{ gestureEnabled: false, headerShown: false }}
       />
     </AppStack.Navigator>
   );

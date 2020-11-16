@@ -14,13 +14,14 @@ import Animated, {
 } from "react-native-reanimated";
 import Svg, { Path } from "react-native-svg";
 import { Feather as Icon } from "@expo/vector-icons";
-import { Box, Text, useTheme } from "../components";
+import { Box, Text, useTheme, Header } from "../components";
+import { AppNavigationProps } from "../components/Navigation";
 
 const { width } = Dimensions.get("window");
 const DURATION_MIN = 400;
 const DURATION = 600;
 const DURATION_MAX = 800;
-const balloonSize = 100;
+const balloonSize = 80;
 const size = 50;
 const borderSize = 5;
 const AnimatedBox = Animated.createAnimatedComponent(Box);
@@ -34,7 +35,7 @@ const sliderConfig = {
 };
 
 interface BalloonProps {}
-const Balloon = () => {
+const Balloon = ({ navigation }: AppNavigationProps<"Balloon">) => {
   const theme = useTheme();
   const isGestureActive = useSharedValue(false);
   const isPressActive = useSharedValue(false);
@@ -64,8 +65,8 @@ const Balloon = () => {
   );
 
   const animatedSize = useDerivedValue(() => {
-    const currentSize = isActive.value ? size : size * (1 / 2);
-    return withTiming(currentSize);
+    const currentSize = isActive.value ? size : size / 2;
+    return withTiming(currentSize, { duration: DURATION_MAX });
   });
 
   const style = useAnimatedStyle(() => {
@@ -73,16 +74,20 @@ const Balloon = () => {
       width: animatedSize.value,
       height: animatedSize.value,
       transform: [{ translateX: translateX.value }],
-      borderRadius: withTiming(isActive.value ? size / 2 : size * (1 / 6)),
+      borderRadius: withTiming(isActive.value ? size / 2 : size * (1 / 6), {
+        duration: DURATION_MAX,
+      }),
     };
   });
 
   const innerStyle = useAnimatedStyle(() => {
     const currentSize = isActive.value ? size - borderSize : size * (1 / 6);
     return {
-      width: withTiming(currentSize),
-      height: withTiming(currentSize),
-      borderRadius: withTiming(isActive.value ? (size - borderSize) / 2 : 0),
+      width: withTiming(currentSize, { duration: DURATION_MAX }),
+      height: withTiming(currentSize, { duration: DURATION_MAX }),
+      borderRadius: withTiming(isActive.value ? (size - borderSize) / 2 : 0, {
+        duration: DURATION_MAX,
+      }),
     };
   });
 
@@ -92,9 +97,7 @@ const Balloon = () => {
         (translateX.value * sliderConfig.max) / sliderConfig.width
       )}`
   );
-  const rotate = useDerivedValue(() =>
-    withSpring(rotation.value, { overshootClamping: false })
-  );
+  const rotate = useDerivedValue(() => withSpring(rotation.value));
   const balloonProps = useAnimatedProps(() => ({
     height: withTiming(isActive.value ? balloonSize : 0, {
       duration: isActive.value ? DURATION_MIN : DURATION,
@@ -119,58 +122,64 @@ const Balloon = () => {
   }));
 
   return (
-    <Box flex={1} backgroundColor="mainBackground">
-      <Title />
-      <Box flex={1} justifyContent="flex-end">
-        <Box height={size} flexDirection="row" alignItems="center">
-          <Box flex={1} justifyContent="center">
-            <SliderLine translateX={translateX} />
-          </Box>
-          <AnimatedBox
-            position="absolute"
-            height={balloonSize}
-            width={balloonSize}
-            alignItems="center"
-            justifyContent="center"
-          >
-            <PanGestureHandler onGestureEvent={onGestureEvent}>
-              <AnimatedBox backgroundColor="tertiary" style={style}>
-                <Pressable
-                  onPressIn={() => {
-                    isPressActive.value = true;
-                  }}
-                  onPressOut={() => {
-                    isPressActive.value = false;
-                  }}
-                  style={{
-                    flex: 1,
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  <AnimatedBox
-                    backgroundColor="mainBackground"
-                    style={innerStyle}
+    <>
+      <Header
+        left={{ icon: "chevron-left", onPress: () => navigation.goBack() }}
+      />
+      <Box flex={1} paddingTop="l" backgroundColor="mainBackground">
+        <Title />
+        <Box flex={1} justifyContent="flex-end">
+          <Box height={size} flexDirection="row" alignItems="center">
+            <Box flex={1} justifyContent="center">
+              <SliderLine translateX={translateX} />
+            </Box>
+            <Box
+              position="absolute"
+              left={(0.3 * width - size) / 2}
+              height={size}
+              width={size}
+              alignItems="center"
+              justifyContent="center"
+            >
+              <PanGestureHandler onGestureEvent={onGestureEvent}>
+                <AnimatedBox backgroundColor="tertiary" style={style}>
+                  <Pressable
+                    onPressIn={() => {
+                      isPressActive.value = true;
+                    }}
+                    onPressOut={() => {
+                      isPressActive.value = false;
+                    }}
+                    style={{
+                      flex: 1,
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    <AnimatedBox
+                      backgroundColor="mainBackground"
+                      style={innerStyle}
+                    />
+                  </Pressable>
+                </AnimatedBox>
+              </PanGestureHandler>
+              <AnimatedBox position="absolute" style={balloonContainerStyle}>
+                <AnimatedSvg viewBox="0 0 4 6" animatedProps={balloonProps}>
+                  <Path
+                    fill={theme.colors.tertiary}
+                    d="M 4 2 A 1 1 0 0 0 0 2 C 0 3 1 4 2 5 C 3 4 4 3 4 2 L 4 2 M 2 5 C 1 6 1 6 2 6 C 3 6 3 6 2 5 Z"
                   />
-                </Pressable>
+                </AnimatedSvg>
+                <BalloonText quantity={quantity} isActive={isActive} />
               </AnimatedBox>
-            </PanGestureHandler>
-            <AnimatedBox position="absolute" style={balloonContainerStyle}>
-              <AnimatedSvg viewBox="0 0 40 30" animatedProps={balloonProps}>
-                <Path
-                  fill={theme.colors.tertiary}
-                  d="M 20 0 Q 40 0 20 30 Q 0 0 20 0 M 20 30 Q 25 34 20 34 Q 15 34 20 30 Z"
-                />
-              </AnimatedSvg>
-              <BalloonText quantity={quantity} isActive={isActive} />
-            </AnimatedBox>
-          </AnimatedBox>
+            </Box>
+          </Box>
+        </Box>
+        <Box flex={1} alignItems="flex-end" justifyContent="flex-end">
+          <Button />
         </Box>
       </Box>
-      <Box flex={1} alignItems="flex-end" justifyContent="flex-end">
-        <Button />
-      </Box>
-    </Box>
+    </>
   );
 };
 
@@ -221,29 +230,28 @@ const BalloonText = ({ quantity, isActive }: BalloonTextProps) => {
   const animatedStyle = useAnimatedStyle(() => ({
     fontSize: withTiming(isActive.value ? 18 : 1, { duration: DURATION }),
     color: theme.colors.mainBackground,
-    paddingBottom: 10,
   }));
   return (
-    <Box
-      style={StyleSheet.absoluteFill}
-      justifyContent="center"
-      alignItems="center"
-    >
-      <AnimatedTextInput
-        underlineColorAndroid="transparent"
-        editable={false}
-        value={quantity.value}
-        style={animatedStyle}
-        animatedProps={animatedProps}
-      />
+    <Box style={StyleSheet.absoluteFill}>
+      <Box flex={1} justifyContent="flex-end" alignItems="center">
+        <AnimatedTextInput
+          underlineColorAndroid="transparent"
+          editable={false}
+          value={quantity.value}
+          style={animatedStyle}
+          animatedProps={animatedProps}
+        />
+      </Box>
+      <Box flex={1} />
     </Box>
   );
 };
 
 const Button = () => {
+  const theme = useTheme();
   return (
     <Box
-      backgroundColor="secondary"
+      backgroundColor="primary"
       style={{ borderRadius: 10 }}
       marginVertical="xl"
       marginHorizontal="l"
@@ -258,8 +266,14 @@ const Button = () => {
           paddingHorizontal="l"
           width={140}
         >
-          <Text textAlign="center">Next</Text>
-          <Icon name="chevron-right" size={16} />
+          <Text textAlign="center" fontFamily="Epilogue-SemiBold">
+            Next
+          </Text>
+          <Icon
+            name="chevron-right"
+            size={18}
+            color={theme.colors.mainForeground}
+          />
         </Box>
       </RectButton>
     </Box>

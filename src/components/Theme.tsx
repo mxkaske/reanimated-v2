@@ -14,6 +14,7 @@ const palette = {
   bluePrimary: "#50B2C0",
   purplePrimary: "#9369C9",
   greyPrimary: "#ADB5BD",
+  yellowPrimary: "#F7C562",
 
   black: "#201E1F",
   white: "#FEEFDD",
@@ -23,7 +24,7 @@ const theme = createTheme({
   colors: {
     mainBackground: palette.white,
     mainForeground: palette.black,
-    primary: palette.redPrimary,
+    primary: palette.yellowPrimary,
     secondary: palette.bluePrimary,
     tertiary: palette.purplePrimary,
     baseText: palette.black,
@@ -99,7 +100,7 @@ interface ThemeProvideProps {
 export const ThemeProvider = ({ children, darkMode }: ThemeProvideProps) => {
   return (
     <ReStyleThemeProvider theme={darkMode ? darkTheme : theme}>
-      <StatusBar style={darkMode ? "light" : "dark"} />
+      <StatusBar hidden={true} style={darkMode ? "light" : "dark"} />
       {children}
     </ReStyleThemeProvider>
   );
