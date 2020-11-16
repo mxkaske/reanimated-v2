@@ -11,6 +11,7 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 import Svg, { Path } from "react-native-svg";
+import { Feather as Icon } from "@expo/vector-icons";
 import { Box, Text, useTheme } from "../components";
 
 const { width } = Dimensions.get("window");
@@ -91,8 +92,8 @@ const Balloon = () => {
     withSpring(rotation.value, { overshootClamping: false })
   );
   const balloonProps = useAnimatedProps(() => ({
-    height: withTiming(isActive.value ? balloonSize : 0),
-    width: withTiming(isActive.value ? balloonSize : 0),
+    height: withTiming(isActive.value ? balloonSize : 0, { duration: 800 }),
+    width: withTiming(isActive.value ? balloonSize : 0, { duration: 800 }),
   }));
 
   const balloonContainerStyle = useAnimatedStyle(() => ({
@@ -100,7 +101,11 @@ const Balloon = () => {
       {
         translateX: withSpring(translateX.value - rotation.value * 2),
       },
-      { translateY: withTiming(isActive.value ? -balloonSize : 0) },
+      {
+        translateY: withTiming(isActive.value ? -balloonSize : 0, {
+          duration: 800,
+        }),
+      },
       { rotate: `${rotate.value}deg` },
     ],
     //height: withTiming(isActive.value ? balloonSize : 30),
@@ -127,15 +132,6 @@ const Balloon = () => {
             alignItems="center"
             justifyContent="center"
           >
-            <AnimatedBox position="absolute" style={balloonContainerStyle}>
-              <AnimatedSvg viewBox="0 0 40 30" animatedProps={balloonProps}>
-                <Path
-                  fill={theme.colors.tertiary}
-                  d="M 20 0 Q 40 0 20 30 Q 0 0 20 0 M 20 30 Q 25 34 20 34 Q 15 34 20 30 Z"
-                />
-              </AnimatedSvg>
-              <BalloonText quantity={quantity} isActive={isActive} />
-            </AnimatedBox>
             <PanGestureHandler onGestureEvent={onGestureEvent}>
               <AnimatedBox backgroundColor="tertiary" style={style}>
                 <Pressable
@@ -158,6 +154,15 @@ const Balloon = () => {
                 </Pressable>
               </AnimatedBox>
             </PanGestureHandler>
+            <AnimatedBox position="absolute" style={balloonContainerStyle}>
+              <AnimatedSvg viewBox="0 0 40 30" animatedProps={balloonProps}>
+                <Path
+                  fill={theme.colors.tertiary}
+                  d="M 20 0 Q 40 0 20 30 Q 0 0 20 0 M 20 30 Q 25 34 20 34 Q 15 34 20 30 Z"
+                />
+              </AnimatedSvg>
+              <BalloonText quantity={quantity} isActive={isActive} />
+            </AnimatedBox>
           </AnimatedBox>
         </Box>
       </Box>
@@ -213,7 +218,7 @@ const BalloonText = ({ quantity, isActive }: BalloonTextProps) => {
   }));
 
   const animatedStyle = useAnimatedStyle(() => ({
-    fontSize: withTiming(isActive.value ? 18 : 1),
+    fontSize: withTiming(isActive.value ? 18 : 1, { duration: 800 }),
     color: theme.colors.mainBackground,
     paddingBottom: 10,
   }));
@@ -237,23 +242,22 @@ const BalloonText = ({ quantity, isActive }: BalloonTextProps) => {
 const Button = () => {
   return (
     <Box
-      width={100}
-      height={50}
       backgroundColor="secondary"
       style={{ borderRadius: 10 }}
       margin="xl"
       overflow="hidden"
     >
-      <RectButton style={{ flex: 1 }} onPress={() => null}>
+      <RectButton onPress={() => null}>
         <Box
-          flex={1}
           flexDirection="row"
           justifyContent="space-between"
           alignItems="center"
-          padding="s"
+          paddingVertical="m"
+          paddingHorizontal="l"
+          width={140}
         >
           <Text textAlign="center">Next</Text>
-          <Text textAlign="center">+</Text>
+          <Icon name="chevron-right" size={16} />
         </Box>
       </RectButton>
     </Box>
