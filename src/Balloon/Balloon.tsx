@@ -11,6 +11,7 @@ import Animated, {
   withTiming,
   withDecay,
   Easing,
+  delay,
 } from "react-native-reanimated";
 import Svg, { Path } from "react-native-svg";
 import { Feather as Icon } from "@expo/vector-icons";
@@ -18,7 +19,7 @@ import { Box, Text, useTheme, Header } from "../components";
 import { AppNavigationProps } from "../components/Navigation";
 
 const d =
-  "M 4 2 A 1 1 0 0 0 0 2 C 0 3 1 4 2 5 C 3 4 4 3 4 2 L 4 2 M 2 5 C 1 6 1.5 6 2 6 C 2.5 6 3 6 2 5 Z";
+  "M 8 4 A 1 1 0 0 0 0 4 C 0 5 1 7 4 9 C 7 7 8 5 8 4 L 8 4 M 4 9 C 2 10 4 10 4 10 C 4 10 6 10 4 9 Z";
 const { width } = Dimensions.get("window");
 const DURATION_MIN = 300;
 const DURATION = 400;
@@ -33,7 +34,7 @@ const sliderConfig = {
   height: 2,
   width: width * 0.7,
   min: 0,
-  max: 60,
+  max: 70,
 };
 
 interface BalloonProps {}
@@ -42,7 +43,7 @@ const Balloon = ({ navigation }: AppNavigationProps<"Balloon">) => {
   const isGestureActive = useSharedValue(false);
   const isPressActive = useSharedValue(false);
   const translateX = useSharedValue(0);
-  const rotation = useSharedValue(0);
+  const velocity = useSharedValue(0);
   const onGestureEvent = useAnimatedGestureHandler<{ startX: number }>({
     onStart: (_, ctx) => {
       ctx.startX = translateX.value;
@@ -55,16 +56,18 @@ const Balloon = ({ navigation }: AppNavigationProps<"Balloon">) => {
             ? translationX + ctx.startX
             : sliderConfig.width
           : 0;
-      rotation.value = -velocityX / 40;
+      velocity.value = -velocityX;
     },
     onEnd: () => {
       isGestureActive.value = false;
-      rotation.value = 0;
+      velocity.value = 0;
     },
   });
   const isActive = useDerivedValue(
     () => isGestureActive.value || isPressActive.value
   );
+
+  const rotation = useDerivedValue(() => velocity.value / 20);
 
   const animatedSize = useDerivedValue(() => {
     const currentSize = isActive.value ? size : size / 2;
@@ -112,7 +115,13 @@ const Balloon = ({ navigation }: AppNavigationProps<"Balloon">) => {
   const balloonContainerStyle = useAnimatedStyle(() => ({
     transform: [
       {
-        translateX: withSpring(translateX.value - rotation.value * 2),
+        translateX: withSpring(translateX.value - rotation.value / 4, {
+          damping: 10,
+          mass: 1,
+          stiffness: 50,
+          restDisplacementThreshold: 0.001,
+          restSpeedThreshold: 0.001,
+        }),
       },
       {
         translateY: withTiming(isActive.value ? -balloonSize : 0, {
@@ -166,7 +175,7 @@ const Balloon = ({ navigation }: AppNavigationProps<"Balloon">) => {
                 </AnimatedBox>
               </PanGestureHandler>
               <AnimatedBox position="absolute" style={balloonContainerStyle}>
-                <AnimatedSvg viewBox="0 0 4 6" animatedProps={balloonProps}>
+                <AnimatedSvg viewBox="0 0 8 10" animatedProps={balloonProps}>
                   <Path fill={theme.colors.tertiary} d={d} />
                 </AnimatedSvg>
                 <BalloonText quantity={quantity} isActive={isActive} />
@@ -230,11 +239,11 @@ const BalloonText = ({ quantity, isActive }: BalloonTextProps) => {
   const animatedStyle = useAnimatedStyle(() => ({
     fontSize: withTiming(isActive.value ? 18 : 1, { duration: DURATION }),
     color: theme.colors.mainBackground,
-    fontFamily: "Poppins-Light",
+    fontFamily: "Poppins-SemiBold",
   }));
   return (
     <Box style={StyleSheet.absoluteFill}>
-      <Box flex={1} justifyContent="flex-end" alignItems="center">
+      <Box flex={4} justifyContent="flex-end" alignItems="center">
         <AnimatedTextInput
           underlineColorAndroid="transparent"
           editable={false}
@@ -243,7 +252,7 @@ const BalloonText = ({ quantity, isActive }: BalloonTextProps) => {
           animatedProps={animatedProps}
         />
       </Box>
-      <Box flex={1} />
+      <Box flex={3} />
     </Box>
   );
 };
