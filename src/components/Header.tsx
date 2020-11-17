@@ -15,7 +15,7 @@ const Header = ({ left }: HeaderProps) => {
   const insets = useSafeAreaInsets();
   return (
     <Box
-      style={{ paddingTop: insets.top + 10 }}
+      style={{ paddingTop: insets.top + 20 }}
       paddingHorizontal="m"
       flexDirection="row"
       backgroundColor="mainBackground"
