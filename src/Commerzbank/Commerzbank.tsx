@@ -8,8 +8,8 @@ import Animated, {
 } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-interface ComponentProps {}
-const Component = () => {
+interface CommerzbankProps {}
+const Commerzbank = () => {
   const insets = useSafeAreaInsets();
   const ref = useRef<Animated.ScrollView>(null);
   const isEnd = useSharedValue(false);
@@ -48,4 +48,4 @@ const Component = () => {
   );
 };
 
-export default Component;
+export default Commerzbank;
