@@ -18,6 +18,10 @@ const palette = {
 
   black: "#201E1F",
   white: "#FEEFDD",
+
+  // Commerzbank colors
+  cbPrimary: "#F5CB56",
+  cbSecondary: "#323032",
 };
 
 const theme = createTheme({
@@ -30,6 +34,12 @@ const theme = createTheme({
     baseText: palette.black,
     baseDescription: palette.greyPrimary,
     baseTitle: palette.bluePrimary,
+
+    // Commerzbank colors
+    cbBackground: "white",
+    cbForeground: palette.black,
+    cbPrimary: palette.cbPrimary,
+    cbSecondary: palette.cbSecondary,
   },
   spacing: {
     xs: 4,
@@ -89,6 +99,12 @@ const darkTheme = {
     baseText: palette.white,
     baseTitle: palette.redPrimary,
     baseDescription: palette.white,
+
+    // Commerzbank colors
+    cbBackground: palette.black,
+    cbForeground: "white",
+    cbPrimary: palette.cbSecondary,
+    cbSecondary: palette.cbPrimary,
   },
 };
 

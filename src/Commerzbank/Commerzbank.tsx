@@ -4,12 +4,13 @@ import { Box, Text } from "../components";
 import Footer from "./Footer";
 import Animated, {
   useAnimatedScrollHandler,
-  useDerivedValue,
   useSharedValue,
 } from "react-native-reanimated";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 interface ComponentProps {}
 const Component = () => {
+  const insets = useSafeAreaInsets();
   const ref = useRef<Animated.ScrollView>(null);
   const isEnd = useSharedValue(false);
   const scrollHandler = useAnimatedScrollHandler({
@@ -30,13 +31,17 @@ const Component = () => {
   // const scrollToEnd = () => ref.current.getNode().scrollToEnd();
 
   return (
-    <Box flex={1}>
+    <Box
+      flex={1}
+      backgroundColor="cbBackground"
+      style={{ paddingTop: insets.top }}
+    >
       <Animated.ScrollView
         ref={ref}
         onScroll={scrollHandler}
         scrollEventThrottle={16}
       >
-        <Text>{faker.lorem.paragraphs(20)}</Text>
+        <Text padding="m">{faker.lorem.paragraphs(10)}</Text>
       </Animated.ScrollView>
       <Footer isEnd={isEnd} scrollToEnd={scrollToEnd} />
     </Box>

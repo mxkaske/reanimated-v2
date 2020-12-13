@@ -70,7 +70,11 @@ const AppContainer = ({ darkMode, setDarkMode }: AppContainer) => {
         component={Balloon}
         options={{ gestureEnabled: false, headerShown: false }}
       />
-      <AppStack.Screen name="Commerzbank" component={Commerzbank} />
+      <AppStack.Screen
+        name="Commerzbank"
+        component={Commerzbank}
+        options={{ gestureEnabled: false, headerShown: false }}
+      />
     </AppStack.Navigator>
   );
 };
