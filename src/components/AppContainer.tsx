@@ -8,11 +8,11 @@ import RoundedIconButton from "./RoundedIconButton";
 import { useTheme } from "@shopify/restyle";
 import { ScrollAnimation } from "../ScrollAnimation";
 import { ColorIntensity } from "../ColorIntensity";
-import { Loading } from "../Loading";
 import App from "../../App";
 import { Pagination } from "../Pagination";
 import { Mask } from "../Mask";
 import { Balloon } from "../Balloon";
+import { Commerzbank } from "../Commerzbank";
 
 const AppStack = createStackNavigator<AppRoutes>();
 
@@ -59,7 +59,6 @@ const AppContainer = ({ darkMode, setDarkMode }: AppContainer) => {
         component={ColorIntensity}
         options={{ gestureEnabled: false }}
       />
-      <AppStack.Screen name="Loading" component={Loading} />
       <AppStack.Screen name="Pagination" component={Pagination} />
       <AppStack.Screen
         name="Mask"
@@ -71,6 +70,7 @@ const AppContainer = ({ darkMode, setDarkMode }: AppContainer) => {
         component={Balloon}
         options={{ gestureEnabled: false, headerShown: false }}
       />
+      <AppStack.Screen name="Commerzbank" component={Commerzbank} />
     </AppStack.Navigator>
   );
 };

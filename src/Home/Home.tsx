@@ -27,10 +27,6 @@ const examples: Screen[] = [
     screen: "ColorIntensity",
   },
   {
-    label: "Loading",
-    screen: "Loading",
-  },
-  {
     label: "Pagination",
     screen: "Pagination",
   },
@@ -41,6 +37,10 @@ const examples: Screen[] = [
   {
     label: "Balloon",
     screen: "Balloon",
+  },
+  {
+    label: "Commerzbank",
+    screen: "Commerzbank",
   },
 ];
 

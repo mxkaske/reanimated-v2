@@ -11,8 +11,8 @@ export type AppRoutes = {
   DefaultAnimation: undefined;
   ScrollAnimation: undefined;
   ColorIntensity: undefined;
-  Loading: undefined;
   Pagination: undefined;
   Mask: undefined;
   Balloon: undefined;
+  Commerzbank: undefined;
 };
