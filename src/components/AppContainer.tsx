@@ -76,7 +76,11 @@ const AppContainer = ({ darkMode, setDarkMode }: AppContainer) => {
         component={Commerzbank}
         options={{ gestureEnabled: false, headerShown: false }}
       />
-      <AppStack.Screen name="ScrollHeader" component={ScrollHeader} />
+      <AppStack.Screen
+        name="ScrollHeader"
+        component={ScrollHeader}
+        options={{ headerShown: false }}
+      />
     </AppStack.Navigator>
   );
 };
