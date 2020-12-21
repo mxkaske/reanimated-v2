@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { ThemeProvider, LoadAssets } from "./src/components";
 import AppContainer from "./src/components/AppContainer";
 import { assets as homeAssets } from "./src/Home";
+import { assets as scrollHeaderAssets } from "./src/ScrollHeader";
 
 const fonts = {
   "Epilogue-Bold": require("./assets/fonts/Epilogue/Epilogue-Bold.ttf"),
@@ -13,7 +14,7 @@ const fonts = {
   "Poppins-SemiBold": require("./assets/fonts/Poppins/Poppins-SemiBold.ttf"),
 };
 
-const assets = [...homeAssets];
+const assets = [...homeAssets, ...scrollHeaderAssets];
 
 export default function App() {
   const [darkMode, setDarkMode] = useState(false);

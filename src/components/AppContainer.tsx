@@ -13,6 +13,7 @@ import { Pagination } from "../Pagination";
 import { Mask } from "../Mask";
 import { Balloon } from "../Balloon";
 import { Commerzbank } from "../Commerzbank";
+import { ScrollHeader } from "../ScrollHeader";
 
 const AppStack = createStackNavigator<AppRoutes>();
 
@@ -75,6 +76,7 @@ const AppContainer = ({ darkMode, setDarkMode }: AppContainer) => {
         component={Commerzbank}
         options={{ gestureEnabled: false, headerShown: false }}
       />
+      <AppStack.Screen name="ScrollHeader" component={ScrollHeader} />
     </AppStack.Navigator>
   );
 };

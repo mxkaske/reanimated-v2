@@ -42,6 +42,10 @@ const examples: Screen[] = [
     label: "Commerzbank",
     screen: "Commerzbank",
   },
+  {
+    label: "ScrollHeader",
+    screen: "ScrollHeader",
+  },
 ];
 
 const Home = ({ navigation }: AppNavigationProps<"Home">) => {

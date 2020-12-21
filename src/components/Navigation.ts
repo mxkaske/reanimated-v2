@@ -15,4 +15,5 @@ export type AppRoutes = {
   Mask: undefined;
   Balloon: undefined;
   Commerzbank: undefined;
+  ScrollHeader: undefined;
 };
