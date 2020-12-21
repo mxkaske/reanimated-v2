@@ -1,5 +1,5 @@
 import React from "react";
-import { ActivityIndicator, Dimensions, StyleSheet } from "react-native";
+import { ActivityIndicator, Dimensions, StyleSheet, Image } from "react-native";
 import { Box, Text } from "../components";
 import Animated, {
   Extrapolate,
@@ -22,6 +22,7 @@ const HEIGHT = 340;
 const WIDTH = 546;
 const aspectRatio = HEIGHT / WIDTH;
 const { width } = Dimensions.get("window");
+const height = aspectRatio * width;
 
 const ScrollHeader = () => {
   const tranlationY = useSharedValue(0);
@@ -34,41 +35,31 @@ const ScrollHeader = () => {
     },
   });
 
-  const sticky = useDerivedValue(() =>
-    tranlationY.value >= 0 ? 0 : tranlationY.value
+  const negativeY = useDerivedValue(() => tranlationY.value < 0);
+
+  const scale = useDerivedValue(() =>
+    negativeY.value ? (height - tranlationY.value) / height : 1
   );
-  const innerContainerStyle = useAnimatedStyle(() => ({
+
+  const containerStyle = useAnimatedStyle(() => ({
     transform: [
       {
-        scale: interpolate(
-          sticky.value,
-          [-aspectRatio * width, 0],
-          [2, 1],
-          Extrapolate.CLAMP
-        ),
+        translateY: negativeY.value ? tranlationY.value / 2 : 0,
       },
     ],
-    marginTop: -5,
   }));
 
-  const outerContainerStyle = useAnimatedStyle(() => ({
-    height: interpolate(
-      sticky.value,
-      [-aspectRatio * width, 0],
-      [2 * aspectRatio * width, aspectRatio * width],
-      Extrapolate.CLAMP
-    ),
-    transform: [
-      {
-        translateY: sticky.value,
-      },
-    ],
-    marginTop: -5,
+  const innerContainerStyle = useAnimatedProps(() => ({
+    transform: [{ scale: scale.value }],
+  }));
+
+  const blurContainerStyle = useAnimatedStyle(() => ({
+    height: height - tranlationY.value,
   }));
 
   const blurProps = useAnimatedProps(() => ({
     intensity: interpolate(
-      sticky.value,
+      tranlationY.value,
       [-100, 0],
       [100, 0],
       Extrapolate.CLAMP
@@ -78,15 +69,12 @@ const ScrollHeader = () => {
   return (
     <Box backgroundColor="mainBackground" flex={1}>
       <Animated.ScrollView onScroll={scrollHandler} scrollEventThrottle={16}>
-        <AnimatedBox style={[outerContainerStyle]}>
+        <AnimatedBox style={[containerStyle]}>
           <AnimatedBox style={[innerContainerStyle]}>
-            <Animated.Image
-              source={assets[0]}
-              style={{ width: width, height: aspectRatio * width }}
-            />
+            <Image source={assets[0]} style={{ height, width }} />
             <AnimatedBlur
               animatedProps={blurProps}
-              style={[StyleSheet.absoluteFill]}
+              style={[StyleSheet.absoluteFill, blurContainerStyle]}
             ></AnimatedBlur>
           </AnimatedBox>
           <Box
@@ -97,7 +85,9 @@ const ScrollHeader = () => {
             <ActivityIndicator />
           </Box>
         </AnimatedBox>
-        <Text padding="m">{faker.lorem.paragraphs(10)}</Text>
+        <Box backgroundColor="primary">
+          <Text padding="m">{faker.lorem.paragraphs(10)}</Text>
+        </Box>
       </Animated.ScrollView>
     </Box>
   );
