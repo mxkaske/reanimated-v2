@@ -39,8 +39,13 @@ const ScrollHeader = () => {
         isRefreshing.value = true;
       }
     },
-    onEndDrag: () => {
-      scrollY.value = withSpring(0);
+    onEndDrag: (event) => {
+      if (event.contentOffset.y >= 0) {
+        if (isRefreshing.value) setTrigger(true);
+        isRefreshing.value = false;
+      } else {
+        scrollY.value = withSpring(0);
+      }
     },
     onMomentumEnd: () => {
       if (isRefreshing.value) setTrigger(true);
