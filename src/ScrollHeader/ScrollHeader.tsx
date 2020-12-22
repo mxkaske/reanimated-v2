@@ -32,17 +32,17 @@ const REFRESH_THRESHOLD = -150;
 const ScrollHeader = () => {
   const [text, setText] = useState(faker.lorem.paragraphs(10));
   const [trigger, setTrigger] = useState(false);
-  const tranlationY = useSharedValue(0);
+  const scrollY = useSharedValue(0);
   const isRefreshing = useSharedValue(false);
   const scrollHandler = useAnimatedScrollHandler({
     onScroll: (event) => {
-      tranlationY.value = event.contentOffset.y;
-      if (tranlationY.value <= REFRESH_THRESHOLD) {
+      scrollY.value = event.contentOffset.y;
+      if (scrollY.value <= REFRESH_THRESHOLD) {
         isRefreshing.value = true;
       }
     },
     onEndDrag: () => {
-      tranlationY.value = withSpring(0);
+      scrollY.value = withSpring(0);
     },
     onMomentumEnd: () => {
       if (isRefreshing.value) setTrigger(true);
@@ -57,20 +57,18 @@ const ScrollHeader = () => {
     }
   }, [trigger]);
 
-  const negativeY = useDerivedValue(() => tranlationY.value < 0);
-
   const bannerContainerStyle = useAnimatedStyle(() => ({
     transform: [
       {
-        translateY: negativeY.value ? tranlationY.value / 2 : 0,
+        translateY: scrollY.value < 0 ? scrollY.value / 2 : 0,
       },
     ],
-    marginTop: -10,
+    marginTop: -20,
   }));
 
   const innerBannerContainerStyle = useAnimatedProps(() => ({
     transform: [
-      { scale: negativeY.value ? (height - tranlationY.value) / height : 1 },
+      { scale: scrollY.value < 0 ? (height - scrollY.value) / height : 1 },
     ],
   }));
 
@@ -80,7 +78,7 @@ const ScrollHeader = () => {
 
   const blurProps = useAnimatedProps(() => ({
     intensity: interpolate(
-      tranlationY.value,
+      scrollY.value,
       [REFRESH_THRESHOLD, 0],
       [100, 0],
       Extrapolate.CLAMP
@@ -118,7 +116,7 @@ const ScrollHeader = () => {
             />
           </AnimatedBox>
         </AnimatedBox>
-        <Box>
+        <Box style={{ zIndex: -1 }}>
           <Text padding="m">{text}</Text>
         </Box>
       </Animated.ScrollView>
