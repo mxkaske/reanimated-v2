@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import { ActivityIndicator, Dimensions, StyleSheet, Image } from "react-native";
 import { Box, Text } from "../components";
 import Animated, {
@@ -27,10 +27,11 @@ const WIDTH = 546;
 const aspectRatio = HEIGHT / WIDTH;
 const { width } = Dimensions.get("window");
 const height = aspectRatio * width;
-const REFRESH_THRESHOLD = -100;
+const REFRESH_THRESHOLD = -150;
 
 const ScrollHeader = () => {
   const [text, setText] = useState(faker.lorem.paragraphs(10));
+  const [trigger, setTrigger] = useState(false);
   const tranlationY = useSharedValue(0);
   const isRefreshing = useSharedValue(false);
   const scrollHandler = useAnimatedScrollHandler({
@@ -44,20 +45,21 @@ const ScrollHeader = () => {
       tranlationY.value = withSpring(0);
     },
     onMomentumEnd: () => {
+      if (isRefreshing.value) setTrigger(true);
       isRefreshing.value = false;
-      //setText(faker.lorem.paragraphs(10));
     },
   });
 
-  //useAnimationReaction => if (tranlationY === 0 && isRefreshing === true) { setText(); isRefreshind.value = false }
+  useEffect(() => {
+    if (trigger) {
+      setText(faker.lorem.paragraphs(10));
+      setTrigger(false);
+    }
+  }, [trigger]);
 
   const negativeY = useDerivedValue(() => tranlationY.value < 0);
 
-  const scale = useDerivedValue(() =>
-    negativeY.value ? (height - tranlationY.value) / height : 1
-  );
-
-  const containerStyle = useAnimatedStyle(() => ({
+  const bannerContainerStyle = useAnimatedStyle(() => ({
     transform: [
       {
         translateY: negativeY.value ? tranlationY.value / 2 : 0,
@@ -66,8 +68,10 @@ const ScrollHeader = () => {
     marginTop: -10,
   }));
 
-  const innerContainerStyle = useAnimatedProps(() => ({
-    transform: [{ scale: scale.value }],
+  const innerBannerContainerStyle = useAnimatedProps(() => ({
+    transform: [
+      { scale: negativeY.value ? (height - tranlationY.value) / height : 1 },
+    ],
   }));
 
   const blurContainerStyle = useAnimatedStyle(() => ({
@@ -78,7 +82,7 @@ const ScrollHeader = () => {
     intensity: interpolate(
       tranlationY.value,
       [REFRESH_THRESHOLD, 0],
-      [-REFRESH_THRESHOLD, 0],
+      [100, 0],
       Extrapolate.CLAMP
     ),
   }));
@@ -94,8 +98,8 @@ const ScrollHeader = () => {
   return (
     <Box backgroundColor="mainBackground" flex={1}>
       <Animated.ScrollView onScroll={scrollHandler} scrollEventThrottle={16}>
-        <AnimatedBox style={[containerStyle]}>
-          <AnimatedBox style={[innerContainerStyle]}>
+        <AnimatedBox style={[bannerContainerStyle]}>
+          <AnimatedBox style={[innerBannerContainerStyle]}>
             <Image source={assets[0]} style={{ height, width }} />
             <AnimatedBlur
               animatedProps={blurProps}
