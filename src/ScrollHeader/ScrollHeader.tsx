@@ -1,14 +1,12 @@
-import React, { useEffect, useLayoutEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ActivityIndicator, Dimensions, StyleSheet, Image } from "react-native";
 import { Box, Text } from "../components";
 import Animated, {
   Extrapolate,
   interpolate,
-  runOnUI,
   useAnimatedProps,
   useAnimatedScrollHandler,
   useAnimatedStyle,
-  useDerivedValue,
   useSharedValue,
   withSpring,
 } from "react-native-reanimated";
@@ -72,10 +70,6 @@ const ScrollHeader = () => {
     ],
   }));
 
-  const blurContainerStyle = useAnimatedStyle(() => ({
-    height: height,
-  }));
-
   const blurProps = useAnimatedProps(() => ({
     intensity: interpolate(
       scrollY.value,
@@ -101,7 +95,7 @@ const ScrollHeader = () => {
             <Image source={assets[0]} style={{ height, width }} />
             <AnimatedBlur
               animatedProps={blurProps}
-              style={[StyleSheet.absoluteFill, blurContainerStyle]}
+              style={[StyleSheet.absoluteFill, { height }]}
             ></AnimatedBlur>
           </AnimatedBox>
           <AnimatedBox
@@ -116,7 +110,7 @@ const ScrollHeader = () => {
             />
           </AnimatedBox>
         </AnimatedBox>
-        <Box style={{ zIndex: -1 }}>
+        <Box>
           <Text padding="m">{text}</Text>
         </Box>
       </Animated.ScrollView>
