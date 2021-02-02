@@ -6,6 +6,11 @@ export interface AppNavigationProps<RouteName extends keyof AppRoutes> {
   route: RouteProp<AppRoutes, RouteName>;
 }
 
+export interface RouteNavigationProps<RouteName extends keyof RootRoutes> {
+  navigation: StackNavigationProp<RootRoutes, RouteName>;
+  route: RouteProp<RootRoutes, RouteName>;
+}
+
 export type AppRoutes = {
   Home: undefined;
   DefaultAnimation: undefined;
@@ -16,4 +21,9 @@ export type AppRoutes = {
   Balloon: undefined;
   Commerzbank: undefined;
   ScrollHeader: undefined;
+};
+
+export type RootRoutes = {
+  App: undefined;
+  Modal: undefined;
 };

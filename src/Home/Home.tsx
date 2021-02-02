@@ -1,6 +1,6 @@
 import React from "react";
 import { Image, Dimensions, ScrollView } from "react-native";
-import { Box, Text } from "../components";
+import { Box, Button, Text } from "../components";
 import { AppNavigationProps, AppRoutes } from "../components/Navigation";
 import BorderlessTap from "../components/BorderlessTap";
 
@@ -56,6 +56,11 @@ const Home = ({ navigation }: AppNavigationProps<"Home">) => {
       justifyContent="space-between"
     >
       <ScrollView>
+        <Button
+          label={"open Modal"}
+          // @ts-ignore-error
+          onPress={() => navigation.navigate("Modal")}
+        />
         {examples.map((item) => (
           <BorderlessTap
             key={item.label}
