@@ -1,13 +1,19 @@
 import React from "react";
-import { View } from "react-native";
-import { Button } from "../components";
+import { Box, Text } from "../components";
 import { RouteNavigationProps } from "../components/Navigation";
 
 const Modal = ({ navigation }: RouteNavigationProps<"Modal">) => {
   return (
-    <View style={{ flex: 1 }}>
-      <Button label={"back"} onPress={() => navigation.goBack()} />
-    </View>
+    <Box
+      backgroundColor="secondary"
+      flex={1}
+      justifyContent="center"
+      alignItems="center"
+    >
+      <Text color="tertiary" variant="hero">
+        My Native Modal
+      </Text>
+    </Box>
   );
 };
 

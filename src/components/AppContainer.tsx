@@ -25,7 +25,7 @@ const RootStackScreen = () => {
     <RootStack.Navigator>
       <RootStack.Screen
         name="App"
-        component={AppStackScreen}
+        component={AppStackScreen} // missing types (on hover)
         options={{ headerShown: false }}
       />
       <RootStack.Screen
@@ -37,7 +37,7 @@ const RootStackScreen = () => {
   );
 };
 
-const AppStackScreen = () => {
+const AppStackScreen = ({ navigation }) => {
   const theme = useTheme<Theme>();
   const { darkMode, setDarkMode } = useDarkMode();
   return (
@@ -53,11 +53,22 @@ const AppStackScreen = () => {
           backgroundColor: theme.colors.mainBackground,
         },
         headerTintColor: theme.colors.mainForeground,
+        headerLeft: () => (
+          <RoundedIconButton
+            onPress={() => navigation.navigate("Modal")}
+            name="archive"
+            size={40}
+            iconRatio={0.6}
+            color="tertiary"
+            backgroundColor="mainBackground"
+          />
+        ),
         headerRight: () => (
           <RoundedIconButton
             onPress={() => setDarkMode((prev) => !prev)}
             name={darkMode ? "sun" : "moon"}
             size={40}
+            iconRatio={0.6}
             color="tertiary"
             backgroundColor="mainBackground"
           />
@@ -71,26 +82,18 @@ const AppStackScreen = () => {
         component={ScrollAnimation}
         options={{ headerShown: false }}
       />
-      <AppStack.Screen
-        name="ColorIntensity"
-        component={ColorIntensity}
-        options={{ gestureEnabled: false }}
-      />
+      <AppStack.Screen name="ColorIntensity" component={ColorIntensity} />
       <AppStack.Screen name="Pagination" component={Pagination} />
-      <AppStack.Screen
-        name="Mask"
-        component={Mask}
-        options={{ gestureEnabled: false }}
-      />
+      <AppStack.Screen name="Mask" component={Mask} />
       <AppStack.Screen
         name="Balloon"
         component={Balloon}
-        options={{ gestureEnabled: false, headerShown: false }}
+        options={{ headerShown: false }}
       />
       <AppStack.Screen
         name="Commerzbank"
         component={Commerzbank}
-        options={{ gestureEnabled: false, headerShown: false }}
+        options={{ headerShown: false }}
       />
       <AppStack.Screen
         name="ScrollHeader"

@@ -24,6 +24,6 @@ export type AppRoutes = {
 };
 
 export type RootRoutes = {
-  App: undefined;
+  App: AppRoutes;
   Modal: undefined;
 };

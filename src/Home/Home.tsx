@@ -56,11 +56,6 @@ const Home = ({ navigation }: AppNavigationProps<"Home">) => {
       justifyContent="space-between"
     >
       <ScrollView>
-        <Button
-          label={"open Modal"}
-          // @ts-ignore-error
-          onPress={() => navigation.navigate("Modal")}
-        />
         {examples.map((item) => (
           <BorderlessTap
             key={item.label}
@@ -71,12 +66,12 @@ const Home = ({ navigation }: AppNavigationProps<"Home">) => {
             </Text>
           </BorderlessTap>
         ))}
+        <Image
+          source={assets[0]}
+          style={{ width, height: 300 }}
+          resizeMode="contain"
+        />
       </ScrollView>
-      <Image
-        source={assets[0]}
-        style={{ width, height: 300 }}
-        resizeMode="contain"
-      />
     </Box>
   );
 };

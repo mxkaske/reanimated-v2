@@ -23,7 +23,7 @@ export default function App() {
   const [darkMode, setDarkMode] = useState(false);
   return (
     <DarkModeProvider value={{ darkMode, setDarkMode }}>
-      <ThemeProvider {...{ darkMode }}>
+      <ThemeProvider>
         <LoadAssets {...{ fonts, assets }}>
           <AppContainer
             setDarkMode={() => setDarkMode((prev) => !prev)}
