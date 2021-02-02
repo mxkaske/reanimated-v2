@@ -11,7 +11,6 @@ import { BaseButton } from "react-native-gesture-handler";
 import { useNavigation } from "@react-navigation/native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-const HEIGHT = 60;
 const AnimatedBox = Animated.createAnimatedComponent(Box);
 const AnimatedIcon = Animated.createAnimatedComponent(Icon);
 
@@ -24,11 +23,12 @@ const Footer = ({ isEnd, scrollToEnd }: FooterProps) => {
   const navigation = useNavigation();
   const theme = useTheme();
   const insets = useSafeAreaInsets();
+  const HEIGHT = 60;
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [
       {
         translateY: withTiming(isEnd.value ? 0 : -HEIGHT - insets.bottom, {
-          duration: 500,
+          duration: 300,
         }),
       },
     ],
@@ -43,12 +43,13 @@ const Footer = ({ isEnd, scrollToEnd }: FooterProps) => {
 
   return (
     <Box
-      height={HEIGHT}
+      height={HEIGHT + insets.bottom}
       flexDirection="row"
       justifyContent="space-between"
-      alignItems="center"
+      //alignItems="center"
       padding="m"
       overflow="hidden"
+      //style={{ paddingBottom: insets.bottom + theme.spacing.m }}
     >
       <AnimatedBox style={[StyleSheet.absoluteFill, animatedStyle]}>
         <Box height={HEIGHT + insets.bottom} backgroundColor="cbPrimary" />
@@ -80,19 +81,17 @@ const AnimatedText = ({ isEnd }) => {
   const theme = useTheme();
   const animatedProps = useAnimatedProps(() => ({
     text: isEnd.value ? "Check out" : "Scroll down",
-  }));
-  const animatedStyle = useAnimatedStyle(() => ({
-    color: isEnd.value ? theme.colors.cbSecondary : theme.colors.cbPrimary,
+    style: {
+      fontSize: 18,
+      fontFamily: "Epilogue-Bold",
+      color: isEnd.value ? theme.colors.cbSecondary : theme.colors.cbPrimary,
+    },
   }));
   return (
     <AnimatedTextInput
       underlineColorAndroid="transparent"
       editable={false}
       value="Scroll down"
-      style={[
-        { ...theme.textVariants.body, fontFamily: "Epilogue-Bold" },
-        animatedStyle,
-      ]}
       animatedProps={animatedProps}
     />
   );
