@@ -1,6 +1,6 @@
 import React from "react";
 import { StyleSheet, useWindowDimensions, View } from "react-native";
-import { Box, Text, useTheme } from "../components";
+import { Box, Text, useTheme } from "../../components";
 import MaskedView from "@react-native-community/masked-view";
 import { PanGestureHandler, ScrollView } from "react-native-gesture-handler";
 import Animated, {
@@ -11,7 +11,7 @@ import Animated, {
   useDerivedValue,
 } from "react-native-reanimated";
 import faker from "faker";
-import RoundedIcon from "../components/RoundedIcon";
+import RoundedIcon from "../../components/RoundedIcon";
 
 const AnimatedBox = Animated.createAnimatedComponent(Box);
 

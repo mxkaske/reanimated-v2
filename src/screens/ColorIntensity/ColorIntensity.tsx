@@ -11,11 +11,11 @@ import Animated, {
   useAnimatedProps,
 } from "react-native-reanimated";
 import { useHeaderHeight } from "@react-navigation/stack";
-import { Box, Text, useTheme } from "../components";
+import { Box, Text, useTheme } from "../../components";
 import { ReText, mixColor } from "react-native-redash";
 import { Feather as Icon } from "@expo/vector-icons";
-import theme from "../components/Theme";
-import CircularAnimation from "../components/CircularAnimation";
+import theme from "../../components/Theme";
+import CircularAnimation from "../../components/CircularAnimation";
 
 const AnimatedBox = Animated.createAnimatedComponent(Box);
 const AnimatedTextInput = Animated.createAnimatedComponent(TextInput);

@@ -12,12 +12,12 @@ import Animated, {
   Extrapolate,
 } from "react-native-reanimated";
 import { useHeaderHeight } from "@react-navigation/stack";
-import { Box, Text, useTheme, Theme } from "../components";
+import { Box, Text, useTheme, Theme } from "../../components";
 import { Svg, Path } from "react-native-svg";
 import { content, waves } from "./data";
 import { interpolatePath, parse, withBouncing } from "react-native-redash";
 import { BoxProps } from "@shopify/restyle";
-import RoundedIcon from "../components/RoundedIcon";
+import RoundedIcon from "../../components/RoundedIcon";
 
 const AnimatedBox = Animated.createAnimatedComponent(Box);
 const AnimatedPath = Animated.createAnimatedComponent(Path);

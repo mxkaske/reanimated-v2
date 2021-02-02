@@ -1,6 +1,6 @@
 import React from "react";
-import { Box, Text } from "../components";
-import { RouteNavigationProps } from "../components/Navigation";
+import { Box, Text } from "../../components";
+import { RouteNavigationProps } from "../../components/Navigation";
 
 const Modal = ({ navigation }: RouteNavigationProps<"Modal">) => {
   return (

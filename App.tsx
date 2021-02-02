@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import { ThemeProvider, LoadAssets } from "./src/components";
 import AppContainer from "./src/components/AppContainer";
-import { assets as homeAssets } from "./src/Home";
-import { assets as scrollHeaderAssets } from "./src/ScrollHeader";
+import { homeAssets, scrollHeaderAssets } from "./src/screens";
 import { enableScreens } from "react-native-screens";
 import { DarkModeProvider } from "./src/contexts";
 enableScreens();

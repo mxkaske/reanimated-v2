@@ -1,6 +1,6 @@
 import React from "react";
 import { Alert, StyleSheet, TextInput } from "react-native";
-import { Box, Text, useTheme } from "../components";
+import { Box, Text, useTheme } from "../../components";
 import { Feather as Icon } from "@expo/vector-icons";
 import Animated, {
   useAnimatedProps,

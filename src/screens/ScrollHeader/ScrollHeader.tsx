@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { ActivityIndicator, Dimensions, StyleSheet, Image } from "react-native";
-import { Box, Text } from "../components";
+import { Box, Text } from "../../components";
 import Animated, {
   Extrapolate,
   interpolate,

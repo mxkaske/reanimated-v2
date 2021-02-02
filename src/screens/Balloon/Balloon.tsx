@@ -15,8 +15,8 @@ import Animated, {
 } from "react-native-reanimated";
 import Svg, { Path } from "react-native-svg";
 import { Feather as Icon } from "@expo/vector-icons";
-import { Box, Text, useTheme, Header } from "../components";
-import { AppNavigationProps } from "../components/Navigation";
+import { Box, Text, useTheme, Header } from "../../components";
+import { AppNavigationProps } from "../../components/Navigation";
 
 const d =
   "M 8 4 A 1 1 0 0 0 0 4 C 0 5 1 7 4 9 C 7 7 8 5 8 4 L 8 4 M 4 9 C 2 10 4 10 4 10 C 4 10 6 10 4 9 Z";

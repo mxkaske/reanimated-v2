@@ -7,7 +7,7 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from "react-native-reanimated";
-import { Box } from "../components";
+import { Box } from "../../components";
 import Circle from "./Circle";
 
 const AnimatedBox = Animated.createAnimatedComponent(Box);

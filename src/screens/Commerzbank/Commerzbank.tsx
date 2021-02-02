@@ -1,6 +1,6 @@
 import React, { useRef } from "react";
 import faker from "faker";
-import { Box, Text } from "../components";
+import { Box, Text } from "../../components";
 import Footer from "./Footer";
 import Animated, {
   useAnimatedScrollHandler,

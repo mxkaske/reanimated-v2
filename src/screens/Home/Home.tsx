@@ -1,8 +1,8 @@
 import React from "react";
 import { Image, Dimensions, ScrollView } from "react-native";
-import { Box, Button, Text } from "../components";
-import { AppNavigationProps, AppRoutes } from "../components/Navigation";
-import BorderlessTap from "../components/BorderlessTap";
+import { Box, Button, Text } from "../../components";
+import { AppNavigationProps, AppRoutes } from "../../components/Navigation";
+import BorderlessTap from "../../components/BorderlessTap";
 
 export const assets = [require("../../assets/illustration1.png")];
 

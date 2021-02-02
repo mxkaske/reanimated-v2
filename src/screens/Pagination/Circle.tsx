@@ -2,8 +2,8 @@ import React from "react";
 import { View } from "react-native";
 import { cartesian2Canvas, polar2Canvas } from "react-native-redash";
 import { Svg, Path } from "react-native-svg";
-import { Box } from "../components";
-import { useTheme } from "../components";
+import { Box } from "../../components";
+import { useTheme } from "../../components";
 import Animated, {
   useAnimatedProps,
   useDerivedValue,
