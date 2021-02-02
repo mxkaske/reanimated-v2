@@ -3,6 +3,9 @@ import { ThemeProvider, LoadAssets } from "./src/components";
 import AppContainer from "./src/components/AppContainer";
 import { assets as homeAssets } from "./src/Home";
 import { assets as scrollHeaderAssets } from "./src/ScrollHeader";
+import { enableScreens } from "react-native-screens";
+import { DarkModeProvider } from "./src/contexts";
+enableScreens();
 
 const fonts = {
   "Epilogue-Bold": require("./assets/fonts/Epilogue/Epilogue-Bold.ttf"),
@@ -19,13 +22,15 @@ const assets = [...homeAssets, ...scrollHeaderAssets];
 export default function App() {
   const [darkMode, setDarkMode] = useState(false);
   return (
-    <ThemeProvider {...{ darkMode }}>
-      <LoadAssets {...{ fonts, assets }}>
-        <AppContainer
-          setDarkMode={() => setDarkMode((prev) => !prev)}
-          {...{ darkMode }}
-        />
-      </LoadAssets>
-    </ThemeProvider>
+    <DarkModeProvider value={{ darkMode, setDarkMode }}>
+      <ThemeProvider {...{ darkMode }}>
+        <LoadAssets {...{ fonts, assets }}>
+          <AppContainer
+            setDarkMode={() => setDarkMode((prev) => !prev)}
+            {...{ darkMode }}
+          />
+        </LoadAssets>
+      </ThemeProvider>
+    </DarkModeProvider>
   );
 }

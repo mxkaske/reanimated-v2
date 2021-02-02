@@ -7,6 +7,7 @@ import {
   ThemeProvider as ReStyleThemeProvider,
 } from "@shopify/restyle";
 import { StatusBar } from "expo-status-bar";
+import { useDarkMode } from "../hooks/useDarkMode";
 
 const palette = {
   redPrimary: "#FF4000",
@@ -110,10 +111,10 @@ const darkTheme = {
 
 interface ThemeProvideProps {
   children: ReactNode;
-  darkMode?: boolean;
 }
 
-export const ThemeProvider = ({ children, darkMode }: ThemeProvideProps) => {
+export const ThemeProvider = ({ children }: ThemeProvideProps) => {
+  const { darkMode } = useDarkMode();
   return (
     <ReStyleThemeProvider theme={darkMode ? darkTheme : theme}>
       <StatusBar style={darkMode ? "light" : "dark"} />

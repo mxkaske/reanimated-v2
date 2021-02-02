@@ -4,7 +4,7 @@ import { AppRoutes, RootRoutes } from "./Navigation";
 import { Theme } from "./Theme";
 import DefaultAnimation from "../DefaultAnimation";
 import Home from "../Home";
-// import RoundedIconButton from "./RoundedIconButton";
+import RoundedIconButton from "./RoundedIconButton";
 import { useTheme } from "@shopify/restyle";
 import { ScrollAnimation } from "../ScrollAnimation";
 import { ColorIntensity } from "../ColorIntensity";
@@ -15,6 +15,7 @@ import { Commerzbank } from "../Commerzbank";
 import { ScrollHeader } from "../ScrollHeader";
 import { Modal } from "../Modal";
 import { createNativeStackNavigator } from "react-native-screens/native-stack";
+import { useDarkMode } from "../hooks/useDarkMode";
 
 const RootStack = createNativeStackNavigator<RootRoutes>();
 const AppStack = createStackNavigator<AppRoutes>();
@@ -38,6 +39,7 @@ const RootStackScreen = () => {
 
 const AppStackScreen = () => {
   const theme = useTheme<Theme>();
+  const { darkMode, setDarkMode } = useDarkMode();
   return (
     <AppStack.Navigator
       screenOptions={{
@@ -51,15 +53,15 @@ const AppStackScreen = () => {
           backgroundColor: theme.colors.mainBackground,
         },
         headerTintColor: theme.colors.mainForeground,
-        // headerRight: () => (
-        //   <RoundedIconButton
-        //     onPress={setDarkMode}
-        //     name={darkMode ? "sun" : "moon"}
-        //     size={40}
-        //     color="tertiary"
-        //     backgroundColor="mainBackground"
-        //   />
-        // ),
+        headerRight: () => (
+          <RoundedIconButton
+            onPress={() => setDarkMode((prev) => !prev)}
+            name={darkMode ? "sun" : "moon"}
+            size={40}
+            color="tertiary"
+            backgroundColor="mainBackground"
+          />
+        ),
       }}
     >
       <AppStack.Screen name="Home" component={Home} />
